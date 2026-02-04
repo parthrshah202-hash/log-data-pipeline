@@ -1,4 +1,4 @@
-timestamp,,ip_address,endpoint,method,status_code,response_time_ms,bytes_sent,user_agent
+timestamp,user_id,ip_address,endpoint,method,status_code,response_time_ms,bytes_sent,user_agent
 01-01-2024 00:39,user_0398,192.168.219.35,/api/logout,GET,200,236.6,7700,Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/120.0.0.0
 01-01-2024 00:43,user_1219,192.168.112.125,/api/dashboard,GET,200,180.61,2583,Mozilla/5.0 (X11; Linux x86_64) Firefox/121.0
 01-01-2024 01:00,user_1653,192.168.72.19,/static/images/logo.png,GET,200,41.73,429644,Mozilla/5.0 (iPad; CPU OS 17_0 like Mac OS X) Safari/604.1
