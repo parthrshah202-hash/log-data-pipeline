@@ -62,7 +62,32 @@ def create_endpoint_metrics(df):
     return endpoint_metrics
     
     
-
+#creating hourly metrics
+def create_hourly_metrics(df):
+    df['hour']=pd.to_datetime(df['timestamp'],dayfirst=True).dt.hour
+    
+    #grouping
+    hourly_metrics=df.groupby('hour').agg({
+        'response_time_ms':'mean',
+        'status_code':'count',
+    }).reset_index()
+    hourly_metrics.columns=['hour','avg_response_time','total_requests']
+    
+    #Finding Success rate
+    error_df=df[df['status_code']!=200].groupby('hour').size().reset_index(name='error_count')
+    
+    #Merging and cleaning
+    hourly_metrics=hourly_metrics.merge(error_df,on='hour',how='left')
+    hourly_metrics['error_count']=hourly_metrics['error_count'].fillna(0)
+    
+    #Calculation
+    hourly_metrics['success_rate'] = ((hourly_metrics['total_requests'] - hourly_metrics['error_count']) / hourly_metrics['total_requests'] * 100).round(2)
+    
+    print(hourly_metrics.head(10))
+    return hourly_metrics
+    
+    
+    
 
 if __name__=="__main__":
     df=pd.read_csv('Data/CLEANED/cleaned_server_logs.csv')
@@ -72,6 +97,9 @@ if __name__=="__main__":
     
     endpont_metrics=create_endpoint_metrics(df)
     endpont_metrics.to_csv('Data/Transformed/endpoint_metrics.csv')
+    
+    hourly_metrics=create_hourly_metrics(df)
+    hourly_metrics.to_csv('Data/Transformed/hourly_metrics.csv')
     
     
     
