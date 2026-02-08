@@ -7,6 +7,22 @@ def load_data(filepath):
     print("Data Loaded")
     return df
 
+#helper function to calculate error and success
+def add_error_success_metrics(df, metrics, group_column):
+    
+    #create error column
+    error_df=df[df['status_code']!=200].groupby(group_column).size().reset_index(name='error_count')
+    
+    #merging and cleaning
+    metrics=metrics.merge(error_df,on=group_column,how='left')
+    metrics['error_count']=metrics['error_count'].fillna(0)
+    
+    #calculate success rate
+    metrics['success_rate']=((metrics['total_requests']-metrics['error_count'])/metrics['total_requests']*100).round(2)
+    
+    return metrics
+    
+
 #creating user metrics
 def create_user_metrics(df):
     #finding average response time, total user requests and bytes sent using agg()
@@ -18,19 +34,11 @@ def create_user_metrics(df):
     user_metrics.columns=['user_id','avg_response_time','total_requests','total_bytes']
     
     #Finding success rate
-    error_df=df[df['status_code']!=200].groupby('user_id').size()
-    error_df=error_df.reset_index(name='error_count')
-    
-    #Merging & Cleaning
-    user_metrics=user_metrics.merge(error_df,on='user_id',how='left')
-    user_metrics['error_count']=user_metrics['error_count'].fillna(0)
-    
-    #Calculation
-    user_metrics['success_rate']=((user_metrics['total_requests'] - user_metrics['error_count']) / user_metrics['total_requests'] * 100).round(2)
+    user_metrics=add_error_success_metrics(df,user_metrics,'user_id')
     
     #Summary
     print(f"Total User : {len(user_metrics)}")
-    print(user_metrics.head(10))
+    print(user_metrics.head(5))
     
     return user_metrics
 
@@ -43,18 +51,9 @@ def create_endpoint_metrics(df):
     }).reset_index()
     endpoint_metrics.columns=['endpoint','avg_response_time','total_requests','total_bytes']
     
+    #Finding Success rate
+    endpoint_metrics=add_error_success_metrics(df,endpoint_metrics,'endpoint')
     
-    #Finding Error Rate
-    error_df=df[df['status_code']!=200].groupby('endpoint').size().reset_index(name='error_count')
-    
-    #Merging and Cleaning
-    endpoint_metrics=endpoint_metrics.merge(error_df,on='endpoint',how='left')
-    endpoint_metrics['error_count']=endpoint_metrics['error_count'].fillna(0)
-    
-    #Calculation
-    endpoint_metrics['error_rate']=(endpoint_metrics['error_count']/endpoint_metrics['total_requests']*100).round(2)
-      
-      
     #Summary
     print(f"Total Endpoints : {len(endpoint_metrics)}")
     print(endpoint_metrics.head(10))
@@ -74,14 +73,7 @@ def create_hourly_metrics(df):
     hourly_metrics.columns=['hour','avg_response_time','total_requests']
     
     #Finding Success rate
-    error_df=df[df['status_code']!=200].groupby('hour').size().reset_index(name='error_count')
-    
-    #Merging and cleaning
-    hourly_metrics=hourly_metrics.merge(error_df,on='hour',how='left')
-    hourly_metrics['error_count']=hourly_metrics['error_count'].fillna(0)
-    
-    #Calculation
-    hourly_metrics['success_rate'] = ((hourly_metrics['total_requests'] - hourly_metrics['error_count']) / hourly_metrics['total_requests'] * 100).round(2)
+    hourly_metrics=add_error_success_metrics(df,hourly_metrics,'hour')
     
     print(hourly_metrics.head(10))
     return hourly_metrics
@@ -98,14 +90,7 @@ def create_daily_metrics(df):
     daily_metrics.columns=['day','avg_response_time','total_requests']
     
     #Finding Success rate
-    error_df=df[df['status_code']!=200].groupby('day').size().reset_index(name='error_count')
-    
-    #Merging and cleaning
-    daily_metrics=daily_metrics.merge(error_df,on='day',how='left')
-    daily_metrics['error_count']=daily_metrics['error_count'].fillna(0)
-    
-    #Calculation
-    daily_metrics['success_rate'] = ((daily_metrics['total_requests'] - daily_metrics['error_count']) / daily_metrics['total_requests'] * 100).round(2)
+    daily_metrics=add_error_success_metrics(df,daily_metrics,'day')
     
     print(daily_metrics.head(10))
     return daily_metrics
@@ -121,14 +106,7 @@ def create_method_metrics(df):
     method_metrics.columns=['method','avg_response_time','total_requests','total_bytes_shared','avg_bytes']
     
     #Finding Success rate
-    error_df=df[df['status_code']!=200].groupby('method').size().reset_index(name='error_count')
-    
-    #Merging and cleaning
-    method_metrics=method_metrics.merge(error_df,on='method',how='left')
-    method_metrics['error_count']=method_metrics['error_count'].fillna(0)
-    
-    #Calculation
-    method_metrics['success_rate'] = ((method_metrics['total_requests'] - method_metrics['error_count']) / method_metrics['total_requests'] * 100).round(2)
+    method_metrics=add_error_success_metrics(df,method_metrics,'method')
     
     print(method_metrics.head(10))
     return method_metrics
@@ -140,19 +118,21 @@ if __name__=="__main__":
     df=pd.read_csv('Data/CLEANED/cleaned_server_logs.csv')
     
     user_metrics=create_user_metrics(df)
-    user_metrics.to_csv('Data/Transformed/user_metrics.csv')
+    user_metrics.to_csv('Data/Transformed/user_metrics.csv',index=False)
     
     endpoint_metrics=create_endpoint_metrics(df)
-    endpoint_metrics.to_csv('Data/Transformed/endpoint_metrics.csv')
+    endpoint_metrics.to_csv('Data/Transformed/endpoint_metrics.csv',index=False)
     
     hourly_metrics=create_hourly_metrics(df)
-    hourly_metrics.to_csv('Data/Transformed/hourly_metrics.csv')
+    hourly_metrics.to_csv('Data/Transformed/hourly_metrics.csv',index=False)
     
     daily_metrics=create_daily_metrics(df)
-    daily_metrics.to_csv('Data/Transformed/daily_metrics.csv')
+    daily_metrics.to_csv('Data/Transformed/daily_metrics.csv',index=False)
     
     method_metrics=create_method_metrics(df)
-    method_metrics.to_csv('Data/Transformed/method_metrics.csv')
+    method_metrics.to_csv('Data/Transformed/method_metrics.csv',index=False)
+    
+    print("All Matrices Created!!")
     
     
     
