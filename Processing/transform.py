@@ -85,6 +85,53 @@ def create_hourly_metrics(df):
     
     print(hourly_metrics.head(10))
     return hourly_metrics
+
+#creating daily metrics
+def create_daily_metrics(df):
+    df['day']=pd.to_datetime(df['timestamp'],dayfirst=True).dt.day
+    
+    #grouping
+    daily_metrics=df.groupby('day').agg({
+        'response_time_ms':'mean',
+        'status_code':'count',
+    }).reset_index()
+    daily_metrics.columns=['day','avg_response_time','total_requests']
+    
+    #Finding Success rate
+    error_df=df[df['status_code']!=200].groupby('day').size().reset_index(name='error_count')
+    
+    #Merging and cleaning
+    daily_metrics=daily_metrics.merge(error_df,on='day',how='left')
+    daily_metrics['error_count']=daily_metrics['error_count'].fillna(0)
+    
+    #Calculation
+    daily_metrics['success_rate'] = ((daily_metrics['total_requests'] - daily_metrics['error_count']) / daily_metrics['total_requests'] * 100).round(2)
+    
+    print(daily_metrics.head(10))
+    return daily_metrics
+    
+#creating method metrics
+def create_method_metrics(df):
+    #grouping
+    method_metrics=df.groupby('method').agg({
+        'response_time_ms':'mean',
+        'status_code':'count',
+        'bytes_sent':['sum','mean']
+    }).reset_index()
+    method_metrics.columns=['method','avg_response_time','total_requests','total_bytes_shared','avg_bytes']
+    
+    #Finding Success rate
+    error_df=df[df['status_code']!=200].groupby('method').size().reset_index(name='error_count')
+    
+    #Merging and cleaning
+    method_metrics=method_metrics.merge(error_df,on='method',how='left')
+    method_metrics['error_count']=method_metrics['error_count'].fillna(0)
+    
+    #Calculation
+    method_metrics['success_rate'] = ((method_metrics['total_requests'] - method_metrics['error_count']) / method_metrics['total_requests'] * 100).round(2)
+    
+    print(method_metrics.head(10))
+    return method_metrics
     
     
     
@@ -95,11 +142,17 @@ if __name__=="__main__":
     user_metrics=create_user_metrics(df)
     user_metrics.to_csv('Data/Transformed/user_metrics.csv')
     
-    endpont_metrics=create_endpoint_metrics(df)
-    endpont_metrics.to_csv('Data/Transformed/endpoint_metrics.csv')
+    endpoint_metrics=create_endpoint_metrics(df)
+    endpoint_metrics.to_csv('Data/Transformed/endpoint_metrics.csv')
     
     hourly_metrics=create_hourly_metrics(df)
     hourly_metrics.to_csv('Data/Transformed/hourly_metrics.csv')
+    
+    daily_metrics=create_daily_metrics(df)
+    daily_metrics.to_csv('Data/Transformed/daily_metrics.csv')
+    
+    method_metrics=create_method_metrics(df)
+    method_metrics.to_csv('Data/Transformed/method_metrics.csv')
     
     
     
