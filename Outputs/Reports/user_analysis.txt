@@ -1,0 +1,45 @@
+USER ANALYSIS
+
+
+Top 10 Most Active Users : 
+  user_id  total_requests
+Anonymous             278
+user_0082              47
+user_0054              44
+user_0071              42
+user_0026              40
+user_0086              40
+user_0015              38
+user_0058              38
+user_0068              38
+user_0085              38
+
+Top 10 Users Having Worst Success Rate
+  user_id  success_rate
+user_0135           0.0
+user_0147           0.0
+user_0148           0.0
+user_0175           0.0
+user_0180           0.0
+user_0256           0.0
+user_0309           0.0
+user_0345           0.0
+user_0351           0.0
+user_0365           0.0
+
+The Average Response Time is 463.22767124442703 ms
+
+Top 10 Users Consuming Maximum Bandwidth : 
+  user_id  total_bytes
+Anonymous     13816138
+user_0079      3917503
+user_0071      2928109
+user_0048      2874655
+user_0005      2720768
+user_0064      2580010
+user_0063      2491870
+user_0021      2462649
+user_0038      2450806
+user_0058      2433043
+
+The Number of users with 0 error are 856
