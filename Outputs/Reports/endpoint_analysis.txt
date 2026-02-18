@@ -1,0 +1,43 @@
+ENDPOINT METRICS
+
+
+The top 5 slowest endpoints are : 
+             endpoint  avg_response_time
+ /api/payment/process        1497.260697
+ /api/products/search         983.975410
+        /api/checkout         951.659405
+/api/products/details         529.016257
+           /api/login         414.063671
+
+The top 5 endpoints with maximum error count are :- 
+          endpoint  error_count
+ /static/js/app.js          154
+          /metrics          151
+  /api/cart/remove          145
+/api/users/profile          145
+     /api/cart/add          141
+
+               endpoint  total_requests
+                /health             579
+   /static/css/main.css             562
+       /api/cart/remove             561
+               /metrics             561
+             /api/login             553
+         /api/dashboard             551
+/static/images/logo.png             547
+  /api/products/details             545
+          /api/checkout             538
+            /api/logout             537
+     /api/users/profile             537
+   /api/products/search             536
+      /static/js/app.js             531
+          /api/settings             524
+    /api/orders/history             513
+          /api/cart/add             507
+   /api/payment/process             502
+
+The endpoint which consumes max_bandwidth is /static/css/main.css consuming 145667185 bytes
+
+Percentage API requets = 69.73 %
+
+Percentage STATIC requets = 17.86 %
