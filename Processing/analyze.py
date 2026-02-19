@@ -130,7 +130,7 @@ def analyze_hourly_metrics(hourly_metrics):
     max_idx=hourly_metrics['total_requests'].idxmax()
     max_hours=hourly_metrics.loc[max_idx,'total_requests']
     max_traffic_hour=hourly_metrics.loc[max_idx,'hour']
-    print(f"The hour which has maximum traffic is {max_traffic_hour}:00 (24 hr format)")
+    print(f"The hour which has maximum traffic is {max_traffic_hour}:00 (24 hr format) with total requests = {max_hours}")
     print("\n")
     output.append(f"The hour which has maximum traffic is {max_traffic_hour}:00 (24 hr format)")
     output.append("")
@@ -174,6 +174,7 @@ def analyze_hourly_metrics(hourly_metrics):
     df3=hourly_metrics[hourly_metrics['error_count']>=(2*error_sd)]
     print("Hours with unusally high errors are :- ")
     print(df3[['hour','error_count']].to_string(index=False))
+    print("\n")
     output.append(f"Hours with unusally high errors are :- ")
     output.append(df3[['hour','error_count']].to_string(index=False)if not df3.empty else "No anomalies detected.")
     output.append("")
@@ -182,7 +183,73 @@ def analyze_hourly_metrics(hourly_metrics):
     report="\n".join(output)
     with open('Outputs/Reports/hourly_analysis.txt','w') as f:
         f.write(report)
+        
+def analyze_daily_metrics(daily_metrics):
+    output=[]
+    output.append("DAILY METRICS\n")
+    output.append("")
     
+    #finding the day with most traffic
+    max_idx=daily_metrics['total_requests'].idxmax()
+    max_day_requests=daily_metrics.loc[max_idx,'total_requests']
+    max_traffic_day=daily_metrics.loc[max_idx,'day']
+    print(f"The day which has maximum traffic is day {max_traffic_day} with total requests = {max_day_requests}")
+    print("\n")
+    output.append(f"The day which has maximum traffic is day {max_traffic_day} with total requests = {max_day_requests}")
+    output.append("")
+    
+    #finding the day with most errors
+    max_idx=daily_metrics['error_count'].idxmax()
+    max_day_errors=daily_metrics.loc[max_idx,'error_count']
+    max_error_day=daily_metrics.loc[max_idx,'day']
+    print(f"The day which has maximum errors is day {max_error_day} with total errors = {max_day_errors}")
+    print("\n")
+    output.append(f"The day which has maximum errors is day {max_error_day} with total errors = {max_day_errors}")
+    output.append("")
+    
+    #finding trend in traffic
+    first_avg=daily_metrics['total_requests'].head(3).mean()
+    last_avg=daily_metrics['total_requests'].tail(3).mean()
+    
+    percent_change=(((last_avg-first_avg)/first_avg)*100).round(2)
+    if percent_change > 5:
+        trend = "Increasing"
+    elif percent_change < -5:
+        trend = "Decreasing"
+    else:
+        trend = "Stable"
+    print(f"Traffic Trend: {trend} ({percent_change:+.2f}% change from start to end of month)")
+    print("\n")
+    output.append(f"Traffic Trend: {trend} ({percent_change:+.2f}% change from start to end of month)")
+    output.append("")
+    
+    #best and worst day (in terms of success rate)
+    max_idx=daily_metrics['success_rate'].idxmax()
+    best_day_rate=daily_metrics.loc[max_idx,'success_rate']
+    best_day=daily_metrics.loc[max_idx,'day']
+    print(f"The best day is day {best_day} with success rate = {best_day_rate} %")
+    print("\n")
+    output.append(f"The best day is day {best_day} with success rate = {best_day_rate} %")
+    output.append("")
+    
+    min_idx=daily_metrics['success_rate'].idxmin()
+    worst_day_rate=daily_metrics.loc[min_idx,'success_rate']
+    worst_day=daily_metrics.loc[min_idx,'day']
+    print(f"The worst day is day {worst_day} with success rate = {worst_day_rate} %")
+    print("\n")
+    output.append(f"The worst day is day {worst_day} with success rate = {worst_day_rate} %")
+    output.append("")
+    
+    #finding average daily request value
+    avg_requests=daily_metrics['total_requests'].mean().round()
+    print(f"The average request volume is {avg_requests} requests per day")
+    output.append(f"The average request volume is {avg_requests} requests per day")
+    output.append("")
+    
+    #Joining all lines and writing to file
+    report="\n".join(output)
+    with open('Outputs/Reports/daily_analysis.txt','w') as f:
+        f.write(report)
     
 
 if __name__=="__main__":
@@ -194,5 +261,8 @@ if __name__=="__main__":
     
     hourly_metrics=load_metrics("Data/Transformed/hourly_metrics.csv")
     analyze_hourly_metrics(hourly_metrics)
+    
+    daily_metrics=load_metrics("Data/Transformed/daily_metrics.csv")
+    analyze_daily_metrics(daily_metrics)
     
     

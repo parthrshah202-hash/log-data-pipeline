@@ -1,0 +1,14 @@
+DAILY METRICS
+
+
+The day which has maximum traffic is day 28 with total requests = 327
+
+The day which has maximum errors is day 22 with total errors = 79
+
+Traffic Trend: Stable (+1.68% change from start to end of month)
+
+The best day is day 21 with success rate = 81.76 %
+
+The worst day is day 1 with success rate = 72.44 %
+
+The average request volume is 296.0 requests per day
