@@ -109,6 +109,7 @@ def analyze_endpoint_metrics(endpoint_metrics):
     
     print(f"Percentage API requets = {api_percent} %")
     print(f"Percentage STATIC requets = {static_percent} %")
+    print("\n")
     
     output.append(f"Percentage API requets = {api_percent} %")
     output.append("")
@@ -119,6 +120,70 @@ def analyze_endpoint_metrics(endpoint_metrics):
     report="\n".join(output)
     with open('Outputs/Reports/endpoint_analysis.txt','w') as f:
         f.write(report)
+        
+def analyze_hourly_metrics(hourly_metrics):
+    output=[]
+    output.append("HOURLY METRICS\n")
+    output.append("")
+    
+    #finding the hour with most traffic
+    max_idx=hourly_metrics['total_requests'].idxmax()
+    max_hours=hourly_metrics.loc[max_idx,'total_requests']
+    max_traffic_hour=hourly_metrics.loc[max_idx,'hour']
+    print(f"The hour which has maximum traffic is {max_traffic_hour}:00 (24 hr format)")
+    print("\n")
+    output.append(f"The hour which has maximum traffic is {max_traffic_hour}:00 (24 hr format)")
+    output.append("")
+    
+    #finding peak on and peak off hours
+    df1=hourly_metrics[hourly_metrics['total_requests']>=300]
+    print("Peak hours are :- ")
+    print(df1[['hour','total_requests']].to_string(index=False))
+    print("\n")
+    df2=hourly_metrics[hourly_metrics['total_requests']<300]
+    print("Peak-off hours are :- ")
+    print(df2[['hour','total_requests']].to_string(index=False))
+    print("\n")
+    output.append("Peak hours are :- ")
+    output.append(df1[['hour','total_requests']].to_string(index=False))
+    output.append("")
+    output.append("Peak-off hours are :- ")
+    output.append(df2[['hour','total_requests']].to_string(index=False))
+    output.append("")
+    
+    #finding max of average response time
+    max_rsp_time=hourly_metrics['avg_response_time'].max()
+    print(f"The maximum of average response time is {max_rsp_time/1000} seconds")
+    print("\n")
+    output.append(f"The maximum of average response time is {max_rsp_time/1000} seconds")
+    output.append("")
+    
+    #average success rate during peak hours and off-peak hours
+    success_peak=(df1['success_rate'].mean()).round(2)
+    success_peak_off=(df2['success_rate'].mean()).round(2)
+    print(f"Average Success rate during peak hours is {success_peak} %")
+    print("\n")
+    print(f"Average Success rate during peak_off hours is {success_peak_off} %")
+    print("\n")
+    output.append(f"Average Success rate during peak hours is {success_peak} %")
+    output.append(f"Average Success rate during peak-off hours is {success_peak_off} %")
+    output.append("")
+    
+    #hour with unusually high error count
+    error_sd=hourly_metrics['error_count'].std()
+    df3=hourly_metrics[hourly_metrics['error_count']>=(2*error_sd)]
+    print("Hours with unusally high errors are :- ")
+    print(df3[['hour','error_count']].to_string(index=False))
+    output.append(f"Hours with unusally high errors are :- ")
+    output.append(df3[['hour','error_count']].to_string(index=False)if not df3.empty else "No anomalies detected.")
+    output.append("")
+    
+    #Joining all lines and writing to file
+    report="\n".join(output)
+    with open('Outputs/Reports/hourly_analysis.txt','w') as f:
+        f.write(report)
+    
+    
 
 if __name__=="__main__":
     user_metrics=load_metrics("Data/Transformed/user_metrics.csv")
@@ -126,5 +191,8 @@ if __name__=="__main__":
     
     endpoint_metrics=load_metrics("Data/Transformed/endpoint_metrics.csv")
     analyze_endpoint_metrics(endpoint_metrics)
+    
+    hourly_metrics=load_metrics("Data/Transformed/hourly_metrics.csv")
+    analyze_hourly_metrics(hourly_metrics)
     
     
