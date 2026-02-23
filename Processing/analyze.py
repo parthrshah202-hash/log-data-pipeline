@@ -250,7 +250,74 @@ def analyze_daily_metrics(daily_metrics):
     report="\n".join(output)
     with open('Outputs/Reports/daily_analysis.txt','w') as f:
         f.write(report)
+        
+        
+def analyze_method_metrics(method_metrics):
+    output=[]
+    output.append("METHOD METRICS")
+    output.append("")
     
+    #finding the distribution among all HTTP methods
+    tot_requests=method_metrics['total_requests'].sum()
+    df1=method_metrics.assign(percent=((method_metrics['total_requests']/tot_requests)*100)).round(2)
+    print("The percentage distribution of HTTP method is as follows :- ")
+    print(df1[['method', 'total_requests', 'percent']].to_string(index=False))
+    print("\n")
+    output.append("The percentage distribution of HTTP method is as follows :- ")
+    output.append(df1[['method', 'total_requests', 'percent']].to_string(index=False))
+    
+    #finding slowest method
+    min_idx=method_metrics['avg_response_time'].idxmin()
+    slowest_method_time=method_metrics.loc[min_idx,'avg_response_time']
+    slowest_method=method_metrics.loc[min_idx,'method']
+    print(f"The slowest method is {slowest_method} with average response time = {slowest_method_time} ms")
+    print("\n")
+    output.append(f"The slowest method is {slowest_method} with average response time = {slowest_method_time} ms")
+    output.append("")
+    
+    #finding method with highest error rate
+    max_idx=method_metrics['error_count'].idxmax()
+    max_errors=method_metrics.loc[max_idx,'error_count']
+    max_error_method=method_metrics.loc[max_idx,'method']
+    print(f"The maximum error method is {max_error_method} with error count = {max_errors}")
+    print("\n")
+    output.append(f"The maximum error method is {max_error_method} with error count = {max_errors}")
+    output.append("")
+    
+    #finding the distribution of how much data each method shares
+    tot_bytes=method_metrics['total_bytes_shared'].sum()
+    df2=method_metrics.assign(percent=((method_metrics['total_bytes_shared']/tot_bytes)*100)).round(2)
+    print("The percentage distribution of how much data each method shares is as follows :- ")
+    print(df2[['method', 'total_bytes_shared', 'percent']].to_string(index=False))
+    print("\n")
+    output.append("The percentage distribution of how much data each method shares is as follows :- ")
+    output.append(df2[['method', 'total_bytes_shared', 'percent']].to_string(index=False))
+    output.append("")
+    
+    #finding if POST methods are slower than GET methods
+    temp_method_metrics=method_metrics.copy().set_index('method')
+    post_time=(temp_method_metrics.loc['POST']['avg_response_time']).round(2)
+    get_time=(temp_method_metrics.loc['GET']['avg_response_time']).round(2)
+    result="Both are equal"
+    print(f"Average response time of POST method is : {post_time} ms")
+    print(f"Average response time of GET method is : {get_time} ms")
+    
+    if post_time<get_time:
+        result="GET methods are slower"
+    else:
+        result="POST methods are slower"
+    print(f"CONCLUSION : {result}")
+    print("\n")
+    
+    output.append(f"Average response time of POST method is : {post_time} ms")
+    output.append(f"Average response time of GET method is : {get_time} ms")
+    output.append(f"CONCLUSION : {result}")
+    output.append("")
+    
+    #Joining all lines and writing to file
+    report="\n".join(output)
+    with open('Outputs/Reports/method_analysis.txt','w') as f:
+        f.write(report)
 
 if __name__=="__main__":
     user_metrics=load_metrics("Data/Transformed/user_metrics.csv")
@@ -264,5 +331,8 @@ if __name__=="__main__":
     
     daily_metrics=load_metrics("Data/Transformed/daily_metrics.csv")
     analyze_daily_metrics(daily_metrics)
+    
+    method_metrics=load_metrics("Data/Transformed/method_metrics.csv")
+    analyze_method_metrics(method_metrics)
     
     

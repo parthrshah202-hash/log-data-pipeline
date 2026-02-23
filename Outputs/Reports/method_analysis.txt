@@ -1,0 +1,24 @@
+METHOD METRICS
+
+The percentage distribution of HTTP method is as follows :- 
+method  total_requests  percent
+DELETE             760     8.28
+   GET            5409    58.90
+ PATCH              82     0.89
+  POST            2608    28.40
+   PUT             325     3.54
+The slowest method is GET with average response time = 361.1252874838232 ms
+
+The maximum error method is GET with error count = 1373
+
+The percentage distribution of how much data each method shares is as follows :- 
+method  total_bytes_shared  percent
+DELETE             2994960     0.66
+   GET           440508299    96.72
+ PATCH              328461     0.07
+  POST            10377666     2.28
+   PUT             1235799     0.27
+
+Average response time of POST method is : 729.53 ms
+Average response time of GET method is : 361.13 ms
+CONCLUSION : POST methods are slower
