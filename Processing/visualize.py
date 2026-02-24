@@ -72,7 +72,57 @@ def visualize_endpoint_metrics(endpoint_metrics):
     plt.savefig('Outputs/Charts/slowest_endpoints.png',dpi=300,bbox_inches='tight')
     plt.close()
     
+#Visualizing for hourly metrics
+def visualize_hourly_metrics(hourly_metrics):
+    #Making line chart to show traffic pattern by hour
+    plt.figure(figsize=(12,6))
+    x_axis=hourly_metrics['hour']
+    y_axis=hourly_metrics['total_requests']
     
+    plt.plot(x_axis,y_axis,color="#52E626",linewidth='3',marker='o')
+    plt.grid(True)
+    plt.fill_between(x_axis, y_axis, alpha=0.3, color='steelblue', label='Traffic Volume')
+    plt.axhline(y=300, color='red', linestyle='--',linewidth='2.0', label='Peak Threshold (300)')
+    plt.legend(loc='upper left')
+    
+    plt.title('Traffic Pattern')
+    plt.xlabel('Hour')
+    plt.ylabel('Number of Requests')
+    plt.tight_layout()
+    #plt.show()
+    
+    plt.savefig('Outputs/Charts/hourly_traffic_pattern.png',dpi=300,bbox_inches='tight')
+    plt.close()
+    
+    #Making a dual-axis line chart for total requests and success rate
+    plt.figure(figsize=(14,6))
+    hours=hourly_metrics['hour']
+    tot_requests=hourly_metrics['total_requests']
+    success_rate=hourly_metrics['success_rate']
+    
+    fig, ax1=plt.subplots()
+    
+    ax1.plot(hours,tot_requests,color='#2738F5',marker='o',label='Number of Requests')
+    ax1.set_xlabel('Hours')
+    ax1.set_ylabel('Number of Requests')
+    ax1.tick_params(axis='y', labelcolor='#2738F5')
+    
+    ax2=ax1.twinx()
+    ax2.plot(hours,success_rate,color='#3ED518',marker='s',label='Success Percentage')
+    ax2.set_ylabel('Success Percentage(%)')
+    ax2.tick_params(axis='y', labelcolor='#3ED518')
+    # Combine legends from both axes
+    lines1, labels1 = ax1.get_legend_handles_labels()
+    lines2, labels2 = ax2.get_legend_handles_labels()
+    ax1.legend(lines1 + lines2, labels1 + labels2, loc='upper right')
+    
+    plt.title('Total Requests and Success Rate')
+    ax1.grid(True,alpha=1)
+    plt.tight_layout()
+    #plt.show()
+    
+    plt.savefig('Outputs/Charts/tot_requests and success_rate.png',dpi=300,bbox_inches='tight')
+    plt.close()
     
 if __name__=="__main__":
     user_metrics=pd.read_csv("Data/Transformed/user_metrics.csv")
@@ -80,6 +130,9 @@ if __name__=="__main__":
     
     endpoint_metrics=pd.read_csv("Data/Transformed/endpoint_metrics.csv")
     visualize_endpoint_metrics(endpoint_metrics)
+    
+    hourly_metrics=pd.read_csv("Data/Transformed/hourly_metrics.csv")
+    visualize_hourly_metrics(hourly_metrics)
 
 
 
