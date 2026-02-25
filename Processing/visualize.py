@@ -124,6 +124,70 @@ def visualize_hourly_metrics(hourly_metrics):
     plt.savefig('Outputs/Charts/tot_requests and success_rate.png',dpi=300,bbox_inches='tight')
     plt.close()
     
+#Visualizing for daily metrics
+def visualize_daily_metrics(daily_metrics):
+    #Making a line + scatter plot for error highlightation
+    x_axis=daily_metrics['day']
+    y_axis=daily_metrics['total_requests']
+    
+    threshold=daily_metrics['error_count'].mean()
+    high_errors=daily_metrics[daily_metrics['error_count']>threshold]
+    
+    plt.plot(x_axis,y_axis,color='green',linewidth=1,marker='s',label='total requests')
+    plt.title('Daily Trend with Error Highlightation')
+    plt.xlabel('Day')
+    plt.ylabel('No. of Requests')
+    plt.xticks(daily_metrics['day'])
+    
+    plt.scatter(high_errors['day'],high_errors['total_requests'],color='red',s=150,edgecolors='black',alpha=0.75,zorder=5,label='High Error Day')
+    plt.legend(loc='upper right')
+    plt.grid(True,alpha=0.5)
+    
+    plt.tight_layout()
+    #plt.show()
+    
+    plt.savefig('Outputs/Charts/Daily Trend with Errors.png',dpi=300,bbox_inches='tight')
+    plt.close()
+    
+#Visualizing for method metrics
+def visualize_method_metrics(method_metrics):
+    #Making a pie chart showing method distribution
+    slices=method_metrics['total_requests']
+    label_names=method_metrics['method']
+    explode=[0, 0.01, 0, 0, 0]
+    
+    plt.pie(slices,labels=label_names,autopct='%1.1f%%',explode=explode)
+    plt.title('Method Distribution')
+    #plt.show()
+    
+    plt.savefig('Outputs/Charts/Method Distribution.png',dpi=300,bbox_inches='tight')
+    plt.close()
+    
+    #Making a grouped bar chart to show success vs error breakdown
+    methods=method_metrics['method']
+    errors=method_metrics['error_count']
+    success=method_metrics['total_requests']-method_metrics['error_count']
+    x_indexes=np.arange(len(methods))
+    width=0.2
+    
+    plt.bar(x_indexes-0.2,errors,width=width,color='red',label='Errors')
+    plt.bar(x_indexes+0.2,success,width=width,color='green',label='Success')
+    
+    plt.legend()
+    plt.grid(True,alpha=0.5)
+    plt.xticks(ticks=x_indexes, labels=methods)
+    plt.title('Success  Count V/S Error Count')
+    plt.xlabel('Method')
+    plt.ylabel('No. of Requests')
+    plt.tight_layout()
+    #plt.show()
+    
+    plt.savefig('Outputs/Charts/Method_Success_vs_Error_Count.png',dpi=300,bbox_inches='tight')
+    plt.close()
+    
+
+    
+    
 if __name__=="__main__":
     user_metrics=pd.read_csv("Data/Transformed/user_metrics.csv")
     visualize_user_metrics(user_metrics)
@@ -133,6 +197,12 @@ if __name__=="__main__":
     
     hourly_metrics=pd.read_csv("Data/Transformed/hourly_metrics.csv")
     visualize_hourly_metrics(hourly_metrics)
+    
+    daily_metrics=pd.read_csv("Data/Transformed/daily_metrics.csv")
+    visualize_daily_metrics(daily_metrics)
+    
+    method_metrics=pd.read_csv("Data/Transformed/method_metrics.csv")
+    visualize_method_metrics(method_metrics)
 
 
 
