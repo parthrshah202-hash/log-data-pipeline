@@ -38,6 +38,6 @@ The top 5 endpoints with maximum error count are :-
 
 The endpoint which consumes max_bandwidth is /static/css/main.css consuming 145667185 bytes
 
-Percentage API requets = 69.73 %
+Percentage API requests = 69.73 %
 
-Percentage STATIC requets = 17.86 %
+Percentage STATIC requests = 17.86 %

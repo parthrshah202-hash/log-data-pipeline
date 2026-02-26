@@ -9,6 +9,14 @@ def load_metrics(filename):
     df=pd.read_csv(filename)
     return df
 
+#function to save tet report
+def save_report(output,filename):
+    #Joining all lines and writing to file
+    report="\n".join(output)
+    filepath=f'Outputs/Reports/{filename}'
+    with open(filepath,'w') as f:
+        f.write(report)
+
 def analyze_user_metrics(user_metrics):
     output=[]
     output.append("USER ANALYSIS\n")
@@ -55,10 +63,7 @@ def analyze_user_metrics(user_metrics):
     output.append(f"The Number of users with 0 error are {tot_zero_error}")
     output.append("")
     
-    #Joinning all lines and writing to file
-    report="\n".join(output)
-    with open('Outputs/Reports/user_analysis.txt','w') as f:
-        f.write(report)
+    save_report(output,'user_analysis.txt')
         
 def analyze_endpoint_metrics(endpoint_metrics):
     output=[]
@@ -107,19 +112,16 @@ def analyze_endpoint_metrics(endpoint_metrics):
     api_percent=((total_api_requests/total_requests)*100).round(2)
     static_percent=((total_static_requests/total_requests)*100).round(2)
     
-    print(f"Percentage API requets = {api_percent} %")
-    print(f"Percentage STATIC requets = {static_percent} %")
+    print(f"Percentage API requests = {api_percent} %")
+    print(f"Percentage STATIC requests = {static_percent} %")
     print("\n")
     
-    output.append(f"Percentage API requets = {api_percent} %")
+    output.append(f"Percentage API requests = {api_percent} %")
     output.append("")
-    output.append(f"Percentage STATIC requets = {static_percent} %")
+    output.append(f"Percentage STATIC requests = {static_percent} %")
     output.append("")
     
-    #Joining all lines and writing to file
-    report="\n".join(output)
-    with open('Outputs/Reports/endpoint_analysis.txt','w') as f:
-        f.write(report)
+    save_report(output,'endpoint_analysis.txt')
         
 def analyze_hourly_metrics(hourly_metrics):
     output=[]
@@ -179,10 +181,7 @@ def analyze_hourly_metrics(hourly_metrics):
     output.append(df3[['hour','error_count']].to_string(index=False)if not df3.empty else "No anomalies detected.")
     output.append("")
     
-    #Joining all lines and writing to file
-    report="\n".join(output)
-    with open('Outputs/Reports/hourly_analysis.txt','w') as f:
-        f.write(report)
+    save_report(output,'hourly_analysis.txt')
         
 def analyze_daily_metrics(daily_metrics):
     output=[]
@@ -246,10 +245,7 @@ def analyze_daily_metrics(daily_metrics):
     output.append(f"The average request volume is {avg_requests} requests per day")
     output.append("")
     
-    #Joining all lines and writing to file
-    report="\n".join(output)
-    with open('Outputs/Reports/daily_analysis.txt','w') as f:
-        f.write(report)
+    save_report(output,'daily_analysis.txt')
         
         
 def analyze_method_metrics(method_metrics):
@@ -314,10 +310,7 @@ def analyze_method_metrics(method_metrics):
     output.append(f"CONCLUSION : {result}")
     output.append("")
     
-    #Joining all lines and writing to file
-    report="\n".join(output)
-    with open('Outputs/Reports/method_analysis.txt','w') as f:
-        f.write(report)
+    save_report(output,'method_analysis.txt')
 
 if __name__=="__main__":
     user_metrics=load_metrics("Data/Transformed/user_metrics.csv")
