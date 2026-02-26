@@ -3,6 +3,11 @@ import pandas as pd
 from matplotlib import pyplot as plt
 plt.style.use('fivethirtyeight')
 
+def save_chart(filename):
+    filepath=f'Outputs/Charts/{filename}'
+    plt.savefig(filepath,dpi=300,bbox_inches='tight')
+    plt.close()
+
 #Visualizing for user_metrics
 def visualize_user_metrics(user_metrics) :
     #Making a Horizontal bar chart for the top 10 most active users
@@ -20,22 +25,20 @@ def visualize_user_metrics(user_metrics) :
     plt.tight_layout()
     #plt.show()
 
-    plt.savefig('Outputs/Charts/top_users.png',dpi=300,bbox_inches='tight')
-    plt.close()
+    save_chart('top_users.png')
     
     #Making a histogram for success rate distribution
     success_rate=user_metrics['success_rate']
     bins=[0,10,20,30,40,50,60,70,80,90,100]
 
-    plt.hist(success_rate,bins,color='green',edgecolor='black',alpha=0.75)
+    plt.hist(success_rate,bins,color='#008000',edgecolor='#000000',alpha=0.75)
     plt.title("Success Rate Distribution")
     plt.ylabel("Users")
     plt.xlabel("Success Percentage")
     plt.tight_layout()
     #plt.show()
 
-    plt.savefig('Outputs/Charts/success_rate.png',dpi=300,bbox_inches='tight')
-    plt.close()
+    save_chart('success_rate.png')
 
 #Visualizing for endpoint_metrics
 def visualize_endpoint_metrics(endpoint_metrics):
@@ -43,7 +46,7 @@ def visualize_endpoint_metrics(endpoint_metrics):
     x_axis=endpoint_metrics['avg_response_time']
     y_axis=endpoint_metrics['success_rate']
     
-    plt.scatter(x_axis,y_axis,edgecolor='black',alpha=0.75)
+    plt.scatter(x_axis,y_axis,edgecolor='#000000',alpha=0.75)
     
     plt.title('Avg Response Time V/S Success Rate')
     plt.xlabel('Avg. Response Time(ms)')
@@ -51,8 +54,7 @@ def visualize_endpoint_metrics(endpoint_metrics):
     plt.tight_layout()
     #plt.show()
     
-    plt.savefig('Outputs/Charts/avg_time_vs_success_rate.png',dpi=300,bbox_inches='tight')
-    plt.close()
+    save_chart('avg_time_vs_success_rate.png')
     
     #Making a horizontal bar graph to show the slowest endpoints
     df1=endpoint_metrics.nlargest(10,'avg_response_time')
@@ -69,8 +71,7 @@ def visualize_endpoint_metrics(endpoint_metrics):
     plt.tight_layout()
     #plt.show()
     
-    plt.savefig('Outputs/Charts/slowest_endpoints.png',dpi=300,bbox_inches='tight')
-    plt.close()
+    save_chart('slowest_endpoints.png')
     
 #Visualizing for hourly metrics
 def visualize_hourly_metrics(hourly_metrics):
@@ -81,8 +82,8 @@ def visualize_hourly_metrics(hourly_metrics):
     
     plt.plot(x_axis,y_axis,color="#52E626",linewidth='3',marker='o')
     plt.grid(True)
-    plt.fill_between(x_axis, y_axis, alpha=0.3, color='steelblue', label='Traffic Volume')
-    plt.axhline(y=300, color='red', linestyle='--',linewidth='2.0', label='Peak Threshold (300)')
+    plt.fill_between(x_axis, y_axis, alpha=0.3, color='#00FFFF', label='Traffic Volume')
+    plt.axhline(y=300, color='#FF0000', linestyle='--',linewidth='2.0', label='Peak Threshold (300)')
     plt.legend(loc='upper left')
     
     plt.title('Traffic Pattern')
@@ -91,8 +92,7 @@ def visualize_hourly_metrics(hourly_metrics):
     plt.tight_layout()
     #plt.show()
     
-    plt.savefig('Outputs/Charts/hourly_traffic_pattern.png',dpi=300,bbox_inches='tight')
-    plt.close()
+    save_chart('hourly_traffic_pattern.png')
     
     #Making a dual-axis line chart for total requests and success rate
     plt.figure(figsize=(14,6))
@@ -121,8 +121,7 @@ def visualize_hourly_metrics(hourly_metrics):
     plt.tight_layout()
     #plt.show()
     
-    plt.savefig('Outputs/Charts/tot_requests and success_rate.png',dpi=300,bbox_inches='tight')
-    plt.close()
+    save_chart('tot_requests and success_rate.png')
     
 #Visualizing for daily metrics
 def visualize_daily_metrics(daily_metrics):
@@ -133,21 +132,20 @@ def visualize_daily_metrics(daily_metrics):
     threshold=daily_metrics['error_count'].mean()
     high_errors=daily_metrics[daily_metrics['error_count']>threshold]
     
-    plt.plot(x_axis,y_axis,color='green',linewidth=1,marker='s',label='total requests')
+    plt.plot(x_axis,y_axis,color='#008000',linewidth=1,marker='s',label='total requests')
     plt.title('Daily Trend with Error Highlightation')
     plt.xlabel('Day')
     plt.ylabel('No. of Requests')
     plt.xticks(daily_metrics['day'])
     
-    plt.scatter(high_errors['day'],high_errors['total_requests'],color='red',s=150,edgecolors='black',alpha=0.75,zorder=5,label='High Error Day')
+    plt.scatter(high_errors['day'],high_errors['total_requests'],color='#FF0000',s=150,edgecolors='#000000',alpha=0.75,zorder=5,label='High Error Day')
     plt.legend(loc='upper right')
     plt.grid(True,alpha=0.5)
     
     plt.tight_layout()
     #plt.show()
     
-    plt.savefig('Outputs/Charts/Daily Trend with Errors.png',dpi=300,bbox_inches='tight')
-    plt.close()
+    save_chart('Daily Trend with Errors.png')
     
 #Visualizing for method metrics
 def visualize_method_metrics(method_metrics):
@@ -160,8 +158,7 @@ def visualize_method_metrics(method_metrics):
     plt.title('Method Distribution')
     #plt.show()
     
-    plt.savefig('Outputs/Charts/Method Distribution.png',dpi=300,bbox_inches='tight')
-    plt.close()
+    save_chart('Method Distribution.png')
     
     #Making a grouped bar chart to show success vs error breakdown
     methods=method_metrics['method']
@@ -170,8 +167,8 @@ def visualize_method_metrics(method_metrics):
     x_indexes=np.arange(len(methods))
     width=0.2
     
-    plt.bar(x_indexes-0.2,errors,width=width,color='red',label='Errors')
-    plt.bar(x_indexes+0.2,success,width=width,color='green',label='Success')
+    plt.bar(x_indexes-0.2,errors,width=width,color='#FF0000',label='Errors')
+    plt.bar(x_indexes+0.2,success,width=width,color='#008000',label='Success')
     
     plt.legend()
     plt.grid(True,alpha=0.5)
@@ -182,8 +179,7 @@ def visualize_method_metrics(method_metrics):
     plt.tight_layout()
     #plt.show()
     
-    plt.savefig('Outputs/Charts/Method_Success_vs_Error_Count.png',dpi=300,bbox_inches='tight')
-    plt.close()
+    save_chart('Method_Success_vs_Error_Count.png')
     
 
     
