@@ -63,6 +63,7 @@ def create_endpoint_metrics(df):
     
 #creating hourly metrics
 def create_hourly_metrics(df):
+    df = df.copy()
     df['hour']=pd.to_datetime(df['timestamp'],dayfirst=True).dt.hour
     
     #grouping
@@ -80,6 +81,7 @@ def create_hourly_metrics(df):
 
 #creating daily metrics
 def create_daily_metrics(df):
+    df = df.copy()
     df['day']=pd.to_datetime(df['timestamp'],dayfirst=True).dt.day
     
     #grouping
@@ -132,7 +134,7 @@ if __name__=="__main__":
     method_metrics=create_method_metrics(df)
     method_metrics.to_csv('Data/Transformed/method_metrics.csv',index=False)
     
-    print("All Matrices Created!!")
+    print("All Metrices Created!!")
     
     
     
