@@ -36,9 +36,6 @@ def create_user_metrics(df):
     #Finding success rate
     user_metrics=add_error_success_metrics(df,user_metrics,'user_id')
     
-    #Summary
-    print(f"Total User : {len(user_metrics)}")
-    print(user_metrics.head(5))
     
     return user_metrics
 
@@ -54,9 +51,6 @@ def create_endpoint_metrics(df):
     #Finding Success rate
     endpoint_metrics=add_error_success_metrics(df,endpoint_metrics,'endpoint')
     
-    #Summary
-    print(f"Total Endpoints : {len(endpoint_metrics)}")
-    print(endpoint_metrics.head(10))
     
     return endpoint_metrics
     
@@ -76,7 +70,7 @@ def create_hourly_metrics(df):
     #Finding Success rate
     hourly_metrics=add_error_success_metrics(df,hourly_metrics,'hour')
     
-    print(hourly_metrics.head(10))
+    
     return hourly_metrics
 
 #creating daily metrics
@@ -94,7 +88,7 @@ def create_daily_metrics(df):
     #Finding Success rate
     daily_metrics=add_error_success_metrics(df,daily_metrics,'day')
     
-    print(daily_metrics.head(10))
+    
     return daily_metrics
     
 #creating method metrics
@@ -110,14 +104,14 @@ def create_method_metrics(df):
     #Finding Success rate
     method_metrics=add_error_success_metrics(df,method_metrics,'method')
     
-    print(method_metrics.head(10))
+    
     return method_metrics
     
     
     
 
 if __name__=="__main__":
-    df=pd.read_csv('Data/CLEANED/cleaned_server_logs.csv')
+    df=load_data('Data/CLEANED/cleaned_server_logs.csv')
     
     user_metrics=create_user_metrics(df)
     user_metrics.to_csv('Data/Transformed/user_metrics.csv',index=False)
@@ -134,7 +128,7 @@ if __name__=="__main__":
     method_metrics=create_method_metrics(df)
     method_metrics.to_csv('Data/Transformed/method_metrics.csv',index=False)
     
-    print("All Metrices Created!!")
+    print("All Metrics Created!!")
     
     
     

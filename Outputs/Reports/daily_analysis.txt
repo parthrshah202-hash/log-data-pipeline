@@ -1,14 +1,31 @@
-DAILY METRICS
+======================================================================
+                           DAILY ANALYSIS
+                            
+======================================================================
+Source file : server_logs.csv
+======================================================================
 
+----------------------------------------------------------------------
+📅The Day which has Maximum Traffic is DAY 28 with total requests = 327
+----------------------------------------------------------------------
 
-The day which has maximum traffic is day 28 with total requests = 327
+----------------------------------------------------------------------
+📅The Day which has Maximum Errors is DAY 22 with total errors = 79
+----------------------------------------------------------------------
 
-The day which has maximum errors is day 22 with total errors = 79
+----------------------------------------------------------------------
+Traffic Trend: —→Stable (+1.68% CHANGE from Start to End of Month)
+----------------------------------------------------------------------
 
-Traffic Trend: Stable (+1.68% change from start to end of month)
+----------------------------------------------------------------------
+📅The Best Day is DAY 21 with Success Rate = 81.76 %
 
-The best day is day 21 with success rate = 81.76 %
+📅The Worst Day is DAY 1 with Success Rate = 72.44 %
+----------------------------------------------------------------------
 
-The worst day is day 1 with success rate = 72.44 %
+----------------------------------------------------------------------
+📊The Average Request Volume is 296.0 Requests per DAY
+----------------------------------------------------------------------
 
-The average request volume is 296.0 requests per day
+======================================================================
+======================================================================

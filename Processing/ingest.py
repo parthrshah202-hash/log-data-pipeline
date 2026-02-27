@@ -1,48 +1,28 @@
 import sys
 import numpy as np
 import pandas as pd
+from pprint import pprint
 
 #<Loading a file>
 def load_data(filepath):
     #using filepath so that i can reuse this function
     df=pd.read_csv(filepath)
     print("File read")
-    print(df.head())
     return df
 
 
 
 #<Validating Data>
 def validate_data(df):
-    
-    #Basic sturcture of data
-    print("The Nature of Data is:")
-    print(df.describe())
-    df.info()
-    print("The size of dataset is:")
-    print(df.size)
-    
-    #Duplicate values
-    m=df.duplicated().sum()
-    if m>0:
-        print(f"We have {m} duplicate values")
-    
-    #Empty Values
-    print(f"We have {df['user_id'].isnull().sum()} empty user_ids")
-    print(f"We have {df['ip_address'].isnull().sum()} empty uip_address")
-    print(f"We have {df['endpoint'].isnull().sum()} empty endpoints")
-    print(f"We have {df['method'].isnull().sum()} empty methods")
-    print(f"We have {df['status_code'].isnull().sum()} empty status codes")
-    print(f"We have {df['bytes_sent'].isnull().sum()} empty bytes_sents")
-    print(f"We have {df['response_time_ms'].isnull().sum()} empty response times")
-    print(f"We have {df['user_agent'].isnull().sum()} empty user agents")
-    
-    #negative response time values-->invalid
-    n=(df['response_time_ms']<0).sum()
-    print(f"We have {n} negative response times")
-    
-    m=(df['bytes_sent']>(10**6)).sum()
-    print(f"We have {m} megabytes shared")
+    report={}
+
+    report["dataset_size"]=df.size
+    report["duplicate_rows"]=df.duplicated().sum()
+    report["missing_values"]=df.isnull().sum().to_dict()
+    report["negative_response_time"]=(df['response_time_ms']<0).sum()
+    report["large_bytes_sent"]=(df['bytes_sent']>10**6).sum()
+
+    return report
     
 
 
@@ -70,15 +50,20 @@ def clean_data(df):
     df = df[df['bytes_sent'] < (10**6)]
     
     print("Data Cleaned")
+    print("The size of Cleaned Dataset is:")
     print(df.size)
-    print(df.head())
     return df
 
 
 #<Main Function>
 if __name__ == "__main__":
     df=load_data('Data/RAW/server_logs.csv')
-    validate_data(df)
+    
+    report = validate_data(df)
+    print("Validation Report:")
+    pprint(report)
+    
     df=clean_data(df)
+    
     df.to_csv('Data/CLEANED/cleaned_server_logs.csv',index=None)
     

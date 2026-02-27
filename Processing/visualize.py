@@ -199,6 +199,8 @@ if __name__=="__main__":
     
     method_metrics=pd.read_csv("Data/Transformed/method_metrics.csv")
     visualize_method_metrics(method_metrics)
+    
+    print("All Charts Created!!")
 
 
 

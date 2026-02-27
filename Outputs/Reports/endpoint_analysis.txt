@@ -1,22 +1,36 @@
-ENDPOINT METRICS
+============================================================
+                     ENDPOINT ANALYSIS
+                     
+============================================================
+Source file : server_logs.csv
+Total Endpoints Analyzed: 17
+============================================================
 
-
-The top 5 slowest endpoints are : 
+------------------------------------------------------------
+⏱️SLOWEST ENDPOINTS
+------------------------------------------------------------
              endpoint  avg_response_time
  /api/payment/process        1497.260697
  /api/products/search         983.975410
         /api/checkout         951.659405
 /api/products/details         529.016257
            /api/login         414.063671
+------------------------------------------------------------
 
-The top 5 endpoints with maximum error count are :- 
+------------------------------------------------------------
+⚠️ENDPOINTS WITH MAXIMUM ERROR COUNT
+------------------------------------------------------------
           endpoint  error_count
  /static/js/app.js          154
           /metrics          151
   /api/cart/remove          145
 /api/users/profile          145
      /api/cart/add          141
+------------------------------------------------------------
 
+------------------------------------------------------------
+📈TOTAL TRAFFIC DISTRIBUTION
+------------------------------------------------------------
                endpoint  total_requests
                 /health             579
    /static/css/main.css             562
@@ -35,9 +49,17 @@ The top 5 endpoints with maximum error count are :-
     /api/orders/history             513
           /api/cart/add             507
    /api/payment/process             502
+------------------------------------------------------------
 
-The endpoint which consumes max_bandwidth is /static/css/main.css consuming 145667185 bytes
+------------------------------------------------------------------------------------------------------------------------
+📅The endpoint which consumes max_bandwidth is /static/css/main.css consuming 145667185 bytes
+------------------------------------------------------------------------------------------------------------------------
 
-Percentage API requests = 69.73 %
+------------------------------------------------------------
+📊Percentage API requests = 69.73 %
 
-Percentage STATIC requests = 17.86 %
+📊Percentage STATIC requests = 17.86 %
+------------------------------------------------------------
+
+============================================================
+============================================================
