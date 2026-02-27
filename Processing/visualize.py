@@ -4,12 +4,37 @@ from matplotlib import pyplot as plt
 plt.style.use('fivethirtyeight')
 
 def save_chart(filename):
+    """
+    Saves the current matplotlib figure to the charts directory.
+    
+    Stores the generated visualization as a high-resolution image file.
+    
+    Args:
+        filename (str): Name of the image file to save.
+    
+    Returns:
+        None: Writes the chart image to disk.
+    """
+    
     filepath=f'Outputs/Charts/{filename}'
     plt.savefig(filepath,dpi=300,bbox_inches='tight')
     plt.close()
 
 #Visualizing for user_metrics
 def visualize_user_metrics(user_metrics) :
+    """
+    Generates visualizations for user-level performance metrics.
+    
+    Creates charts highlighting most active users and
+    success rate distribution.
+    
+    Args:
+        user_metrics (pandas.DataFrame): User-level metrics dataset.
+    
+    Returns:
+        None: Saves generated charts to file.
+    """
+    
     #Making a Horizontal bar chart for the top 10 most active users
     df1=user_metrics.nlargest(10,'total_requests')
     x_axis=df1['total_requests']
@@ -42,6 +67,19 @@ def visualize_user_metrics(user_metrics) :
 
 #Visualizing for endpoint_metrics
 def visualize_endpoint_metrics(endpoint_metrics):
+    """
+    Generates visualizations for endpoint-level performance metrics.
+    
+    Creates charts showing response time trends,
+    success rate relationship, and slowest endpoints.
+    
+    Args:
+        endpoint_metrics (pandas.DataFrame): Endpoint-level metrics dataset.
+    
+    Returns:
+        None: Saves generated charts to file.
+    """
+    
     #Making a scatter plot for response time V/S success rate
     x_axis=endpoint_metrics['avg_response_time']
     y_axis=endpoint_metrics['success_rate']
@@ -75,6 +113,19 @@ def visualize_endpoint_metrics(endpoint_metrics):
     
 #Visualizing for hourly metrics
 def visualize_hourly_metrics(hourly_metrics):
+    """
+    Generates visualizations for hourly traffic and performance metrics.
+    
+    Creates charts showing traffic patterns,
+    success rate trends, and peak thresholds.
+    
+    Args:
+        hourly_metrics (pandas.DataFrame): Hourly metrics dataset.
+    
+    Returns:
+        None: Saves generated charts to file.
+    """
+    
     #Making line chart to show traffic pattern by hour
     plt.figure(figsize=(12,6))
     x_axis=hourly_metrics['hour']
@@ -125,6 +176,19 @@ def visualize_hourly_metrics(hourly_metrics):
     
 #Visualizing for daily metrics
 def visualize_daily_metrics(daily_metrics):
+    """
+    Generates visualizations for daily traffic trends.
+    
+    Highlights request volume patterns and
+    days with unusually high error activity.
+    
+    Args:
+        daily_metrics (pandas.DataFrame): Daily metrics dataset.
+    
+    Returns:
+        None: Saves generated charts to file.
+    """
+    
     #Making a line + scatter plot for error highlightation
     x_axis=daily_metrics['day']
     y_axis=daily_metrics['total_requests']
@@ -149,6 +213,19 @@ def visualize_daily_metrics(daily_metrics):
     
 #Visualizing for method metrics
 def visualize_method_metrics(method_metrics):
+    """
+    Generates visualizations for HTTP method-level metrics.
+    
+    Creates charts showing method distribution
+    and success versus error breakdown.
+    
+    Args:
+        method_metrics (pandas.DataFrame): Method-level metrics dataset.
+    
+    Returns:
+        None: Saves generated charts to file.
+    """
+    
     #Making a pie chart showing method distribution
     slices=method_metrics['total_requests']
     label_names=method_metrics['method']
@@ -200,7 +277,9 @@ if __name__=="__main__":
     method_metrics=pd.read_csv("Data/Transformed/method_metrics.csv")
     visualize_method_metrics(method_metrics)
     
-    print("All Charts Created!!")
+    print("\n" + "="*60)
+    print("✓ All Charts Created!!")
+    print("="*60)
 
 
 

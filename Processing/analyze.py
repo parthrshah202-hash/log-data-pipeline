@@ -11,6 +11,19 @@ def load_metrics(filename):
 
 #function to save tet report
 def save_report(output,filename):
+    """
+    Saves a text analysis report to the output directory.
+    
+    Combines report lines into a formatted text file.
+    
+    Args:
+        output (list): List of report lines.
+        filename (str): Name of the output text file.
+    
+    Returns:
+        None: Writes the report to disk.
+    """
+    
     #Joining all lines and writing to file
     report="\n".join(output)
     filepath=f'Outputs/Reports/{filename}'
@@ -18,6 +31,19 @@ def save_report(output,filename):
         f.write(report)
 
 def analyze_user_metrics(user_metrics):
+    """
+    Generates a detailed user-level analysis report.
+    
+    Identifies active users, performance trends, bandwidth usage,
+    and success rate insights.
+    
+    Args:
+        user_metrics (pandas.DataFrame): User-level metrics dataset.
+    
+    Returns:
+        None: Saves the user analysis report to file.
+    """
+    
     output=[]
     output.append("="*60)
     output.append("USER ANALYSIS\n".center(60))
@@ -75,6 +101,19 @@ def analyze_user_metrics(user_metrics):
     save_report(output,'user_analysis.txt')
         
 def analyze_endpoint_metrics(endpoint_metrics):
+    """
+    Generates a detailed endpoint-level analysis report.
+    
+    Highlights traffic distribution, slow endpoints,
+    bandwidth consumption, and error patterns.
+    
+    Args:
+        endpoint_metrics (pandas.DataFrame): Endpoint-level metrics dataset.
+    
+    Returns:
+        None: Saves the endpoint analysis report to file.
+    """
+    
     output=[]
     output.append("="*60)
     output.append("ENDPOINT ANALYSIS\n".center(60))
@@ -142,6 +181,19 @@ def analyze_endpoint_metrics(endpoint_metrics):
     save_report(output,'endpoint_analysis.txt')
         
 def analyze_hourly_metrics(hourly_metrics):
+    """
+    Generates an hourly traffic and performance analysis report.
+    
+    Identifies peak hours, response time trends,
+    success rates, and anomaly detection.
+    
+    Args:
+        hourly_metrics (pandas.DataFrame): Hourly metrics dataset.
+    
+    Returns:
+        None: Saves the hourly analysis report to file.
+    """
+    
     output=[]
     output.append("="*60)
     output.append("HOURLY ANALYSIS\n".center(60))
@@ -206,6 +258,19 @@ def analyze_hourly_metrics(hourly_metrics):
     save_report(output,'hourly_analysis.txt')
         
 def analyze_daily_metrics(daily_metrics):
+    """
+    Generates a daily traffic and performance analysis report.
+    
+    Identifies traffic trends, error patterns,
+    best and worst days, and request volume insights.
+    
+    Args:
+        daily_metrics (pandas.DataFrame): Daily metrics dataset.
+    
+    Returns:
+        None: Saves the daily analysis report to file.
+    """
+    
     output=[]
     output.append("="*70)
     output.append("DAILY ANALYSIS\n".center(70))
@@ -277,6 +342,19 @@ def analyze_daily_metrics(daily_metrics):
         
         
 def analyze_method_metrics(method_metrics):
+    """
+    Generates an HTTP method-level performance analysis report.
+    
+    Evaluates request distribution, response times,
+    error patterns, and data sharing behavior across methods.
+    
+    Args:
+        method_metrics (pandas.DataFrame): Method-level metrics dataset.
+    
+    Returns:
+        None: Saves the method analysis report to file.
+    """
+    
     output=[]
     output.append("="*70)
     output.append("METHOD ANALYSIS\n".center(70))

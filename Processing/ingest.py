@@ -5,6 +5,17 @@ from pprint import pprint
 
 #<Loading a file>
 def load_data(filepath):
+    """
+    Loads a CSV file and returns it as a pandas DataFrame.
+    
+    Reads log data from the given file path for further processing.
+    
+    Args:
+        filepath (str): Path to the CSV file.
+    
+    Returns:
+        pandas.DataFrame: Loaded dataset.
+    """
     #using filepath so that i can reuse this function
     df=pd.read_csv(filepath)
     print("File read")
@@ -14,6 +25,17 @@ def load_data(filepath):
 
 #<Validating Data>
 def validate_data(df):
+    """
+    Generates a validation summary of the dataset.
+    
+    Computes dataset size, duplicate rows, missing values, and basic data quality metrics.
+    
+    Args:
+        df (pandas.DataFrame): Input dataset to validate.
+    
+    Returns:
+        dict: Dictionary containing validation statistics.
+    """
     report={}
 
     report["dataset_size"]=df.size
@@ -28,6 +50,18 @@ def validate_data(df):
 
 #<Cleaning Data>
 def clean_data(df):
+    """
+    Cleans the dataset by handling missing and invalid values.
+    
+    Removes duplicates and filters out unrealistic or incomplete records.
+    
+    Args:
+        df (pandas.DataFrame): Raw dataset to clean.
+    
+    Returns:
+        pandas.DataFrame: Cleaned dataset ready for analysis.
+    """
+    
     #Filling the missing data with appropriate values
     df['user_id']=df['user_id'].fillna("Anonymous")
     df['endpoint']=df['endpoint'].fillna("Unknown")

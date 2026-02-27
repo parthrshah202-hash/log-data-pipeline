@@ -9,6 +9,19 @@ def load_data(filepath):
 
 #helper function to calculate error and success
 def add_error_success_metrics(df, metrics, group_column):
+    """
+    Adds error count and success rate metrics to a grouped dataset.
+    
+    Calculates failed requests and computes success percentage for each group.
+    
+    Args:
+        df (pandas.DataFrame): Original dataset containing status codes.
+        metrics (pandas.DataFrame): Grouped metrics dataset.
+        group_column (str): Column name used for grouping.
+    
+    Returns:
+        pandas.DataFrame: Updated metrics with error count and success rate.
+    """
     
     #create error column
     error_df=df[df['status_code']!=200].groupby(group_column).size().reset_index(name='error_count')
@@ -25,6 +38,18 @@ def add_error_success_metrics(df, metrics, group_column):
 
 #creating user metrics
 def create_user_metrics(df):
+    """
+    Generates aggregated performance metrics for each user.
+    
+    Computes average response time, total requests, total bytes, and success rate per user.
+    
+    Args:
+        df (pandas.DataFrame): Cleaned dataset.
+    
+    Returns:
+        pandas.DataFrame: User-level metrics dataset.
+    """
+    
     #finding average response time, total user requests and bytes sent using agg()
     user_metrics=df.groupby('user_id').agg({
         'response_time_ms':'mean',
@@ -41,6 +66,18 @@ def create_user_metrics(df):
 
 #creating end-point metrics
 def create_endpoint_metrics(df):
+    """
+    Generates aggregated performance metrics for each endpoint.
+    
+    Computes average response time, total requests, total bytes, and success rate per endpoint.
+    
+    Args:
+        df (pandas.DataFrame): Cleaned dataset.
+    
+    Returns:
+        pandas.DataFrame: Endpoint-level metrics dataset.
+    """
+    
     endpoint_metrics=df.groupby('endpoint').agg({
         'response_time_ms':'mean',
         'status_code':'count',
@@ -57,6 +94,18 @@ def create_endpoint_metrics(df):
     
 #creating hourly metrics
 def create_hourly_metrics(df):
+    """
+    Generates aggregated performance metrics grouped by hour.
+    
+    Computes hourly average response time, total requests, and success rate.
+    
+    Args:
+        df (pandas.DataFrame): Cleaned dataset.
+    
+    Returns:
+        pandas.DataFrame: Hourly metrics dataset.
+    """
+    
     df = df.copy()
     df['hour']=pd.to_datetime(df['timestamp'],dayfirst=True).dt.hour
     
@@ -75,6 +124,18 @@ def create_hourly_metrics(df):
 
 #creating daily metrics
 def create_daily_metrics(df):
+    """
+    Generates aggregated performance metrics grouped by day.
+    
+    Computes daily average response time, total requests, and success rate.
+    
+    Args:
+        df (pandas.DataFrame): Cleaned dataset.
+    
+    Returns:
+        pandas.DataFrame: Daily metrics dataset.
+    """
+    
     df = df.copy()
     df['day']=pd.to_datetime(df['timestamp'],dayfirst=True).dt.day
     
@@ -93,6 +154,18 @@ def create_daily_metrics(df):
     
 #creating method metrics
 def create_method_metrics(df):
+    """
+    Generates aggregated performance metrics for each HTTP method.
+    
+    Computes average response time, request count, total and average bytes shared, and success rate.
+    
+    Args:
+        df (pandas.DataFrame): Cleaned dataset.
+    
+    Returns:
+        pandas.DataFrame: Method-level metrics dataset.
+    """
+    
     #grouping
     method_metrics=df.groupby('method').agg({
         'response_time_ms':'mean',
@@ -128,7 +201,9 @@ if __name__=="__main__":
     method_metrics=create_method_metrics(df)
     method_metrics.to_csv('Data/Transformed/method_metrics.csv',index=False)
     
-    print("All Metrics Created!!")
+    print("\n" + "="*60)
+    print("✓ All Metrics Created!!")
+    print("="*60)
     
     
     
