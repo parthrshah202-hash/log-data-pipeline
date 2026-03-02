@@ -13,6 +13,18 @@ def load_data(filename):
 #Function to load report
 @st.cache_data
 def load_report(filename):
+    """
+    Loads a pre-generated text analysis report.
+    
+    Reads a UTF-8 encoded report file for display
+    within the Streamlit dashboard.
+    
+    Args:
+        filename (str): Path to the text report file.
+    
+    Returns:
+        str: Report content as a string.
+    """
     with open(filename, "r", encoding="utf-8") as f:
         return f.read()
     
@@ -36,12 +48,16 @@ if page=="Overview":
     file_path="Data/CLEANED/cleaned_server_logs.csv"
     df=load_data(file_path)
     
-    st.markdown("**Raw file** : server_logs.csv")
-    st.markdown("**Date Created** : 1 Feb 2026")
-    size_mb = os.path.getsize(file_path)/(1024*1024)
-    st.markdown(f"**File size** : {size_mb:.2f} MB")
-    st.markdown(f"**Total Records** : {len(df)}")
-    st.markdown("**Data Retained** : 97.5%")
+    col1,col2,col3,col4=st.columns(4)
+    with col1:
+        st.metric("**Raw file**" , "server_logs.csv")
+    with col2:
+        st.metric("**Date Created**" , "1 Feb 2026")
+    with col3:
+        size_mb = os.path.getsize(file_path)/(1024*1024)
+        st.metric(f"**File size** ", f"{size_mb:.2f} MB")
+    with col4:
+        st.metric(f"**Total Records** ",f"{len(df):,}")
     
     
     st.divider()
@@ -63,13 +79,18 @@ if page=="Overview":
     st.divider()
 
     st.subheader("🛠️ TechStack:")
-    st.markdown("""
-    - Python
-    - NumPy
-    - Pandas
-    - Matplotlib
-    - Streamlit
-    """)
+    col1,col2,col3=st.columns(3)
+    with col1:
+        st.markdown("### ⚙️ Engine")
+        st.write("• Python")
+        st.write("• NumPy")
+        st.write("• Pandas")
+    with col2:
+        st.markdown("### 📊 Visuals")
+        st.write("• Matplotlib")
+    with col3:
+        st.markdown("### 🌐 UI")
+        st.write("• Streamlit")
     
 
     st.write("")
@@ -84,7 +105,7 @@ if page=="User Metrics":
     user_metrics=load_data("Data/Transformed/user_metrics.csv")
     col1,col2,col3=st.columns(3)
     with col1:
-        st.metric("Total Users : ",f"{len(user_metrics):,}")
+        st.metric("Total Users",f"{len(user_metrics):,}")
     with col2:
         avg_time=user_metrics['avg_response_time'].mean()
         st.metric("Avg Response Time",f"{avg_time:.2f}ms")
@@ -109,7 +130,7 @@ if page=="User Metrics":
         st.image("Outputs/Charts/success_rate.png",caption="Success Rate Distribution")
         
 
-#Enpoint Metrics
+#Endpoint Metrics
 if page=="Endpoint Analysis":
     st.title("🔚Endpoint Analysis")
     
@@ -117,7 +138,7 @@ if page=="Endpoint Analysis":
     endpoint_metrics=load_data("Data/Transformed/endpoint_metrics.csv")
     col1,col2,col3=st.columns(3)
     with col1:
-        st.metric("Total Endpoints : ",f"{len(endpoint_metrics):,}")
+        st.metric("Total Endpoints",f"{len(endpoint_metrics):,}")
     with col2:
         avg_time=endpoint_metrics['avg_response_time'].mean()
         st.metric("Avg Response Time",f"{avg_time:.2f}ms")
@@ -140,6 +161,104 @@ if page=="Endpoint Analysis":
         st.image("Outputs/Charts/slowest_endpoints.png",caption="Top 10 Slowest Endpoints")
     with col2:
         st.image("Outputs/Charts/avg_time_vs_success_rate.png",caption="Success Rate Distribution with Average Response Time")
+        
+#Hourly Patterns
+if page=="Hourly Patterns":
+    st.title("⏱️Hourly Patterns")
     
+    #Summary metrics
+    hourly_metrics=load_data("Data/Transformed/hourly_metrics.csv")
+    col1,col2,col3=st.columns(3)
+    with col1:
+        max_idx=hourly_metrics['total_requests'].idxmax()
+        max_traffic_hour=hourly_metrics.loc[max_idx,'hour']
+        st.metric("Busiest Hour",f"{max_traffic_hour}:00")
+    with col2:
+        avg_time=hourly_metrics['avg_response_time'].mean()
+        st.metric("Avg Response Time",f"{avg_time:.2f}ms")
+    with col3:
+        avg_success=hourly_metrics['success_rate'].mean()
+        st.metric("Avg Success Rate", f"{avg_success:.1f}%")
+    
+    #Text Report
+    st.header("Text Report : ",divider=True)
+    with st.expander("📄View Detailed Text Report"):
+        report = load_report("Outputs/Reports/hourly_analysis.txt")
+        st.text(report)
+        
+    st.divider()
+    
+    #Charts
+    st.subheader("📈Charts")
+    col1,col2=st.columns(2)
+    with col1:
+        st.image("Outputs/Charts/hourly_traffic_pattern.png",caption="Hourly Traffic Pattern")
+    with col2:
+        st.image("Outputs/Charts/tot_requests and success_rate.png",caption="Success Rate Distribution with Total Requests")
+    
+    
+#Daily Trends
+if page=="Daily Trends":
+    st.title("🗓️Daily Trends")
+    
+    #Summary metrics
+    daily_metrics=load_data("Data/Transformed/daily_metrics.csv")
+    col1,col2,col3=st.columns(3)
+    with col1:
+        max_idx=daily_metrics['total_requests'].idxmax()
+        max_traffic_day=daily_metrics.loc[max_idx,'day']
+        st.metric("Busiest Day",f"{max_traffic_day}")
+    with col2:
+        max_idx=daily_metrics['error_count'].idxmax()
+        max_error_day=daily_metrics.loc[max_idx,'day']
+        st.metric("Worst Day",f"{max_error_day}")
+    with col3:
+        avg_success=daily_metrics['success_rate'].mean()
+        st.metric("Avg Success Rate", f"{avg_success:.1f}%")
+    
+    #Text Report
+    st.header("Text Report : ",divider=True)
+    with st.expander("📄View Detailed Text Report"):
+        report = load_report("Outputs/Reports/daily_analysis.txt")
+        st.text(report)
+        
+    st.divider()
+    
+    #Charts
+    st.subheader("📈Charts")
+    st.image("Outputs/Charts/Daily Trend with Errors.png",caption="Daily Error Trend")
 
 
+#HTTP Methods
+if page=="HTTP Methods":
+    st.title("🔀HTTP Methods")
+    
+    #Summary metrics
+    method_metrics=load_data("Data/Transformed/method_metrics.csv")
+    col1,col2,col3=st.columns(3)
+    with col1:
+        st.metric("Total Methods",f"{len(method_metrics):,}")
+    with col2:
+        min_idx=method_metrics['avg_response_time'].idxmax()
+        slowest_method=method_metrics.loc[min_idx,'method']
+        st.metric("Slowest Method",f"{slowest_method}")
+    with col3:
+        min_idx=method_metrics['error_count'].idxmin()
+        min_error_method=method_metrics.loc[min_idx,'method']
+        st.metric("Best Method", f"{min_error_method}")
+    
+    #Text Report
+    st.header("Text Report : ",divider=True)
+    with st.expander("📄View Detailed Text Report"):
+        report = load_report("Outputs/Reports/method_analysis.txt")
+        st.text(report)
+        
+    st.divider()
+    
+    #Charts
+    st.subheader("📈Charts")
+    col1,col2=st.columns(2)
+    with col1:
+        st.image("Outputs/Charts/Method Distribution.png",caption="Distribution of Methods")
+    with col2:
+        st.image("Outputs/Charts/Method_Success_vs_Error_Count.png",caption="Error Count among Methods")
