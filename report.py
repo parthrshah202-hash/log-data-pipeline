@@ -5,6 +5,15 @@ title='ANALYSIS REPORT'
 
 class PDF(FPDF):
     def header(self):
+        """
+        Creates a styled header for each PDF page.
+
+        Displays the main report title centered at the top
+        with custom border, background color, and text styling.
+
+        Returns:
+            None: Renders header directly onto the PDF page.
+        """
         self.set_font('DejaVu','',16)
         
         #Adding title in centre
@@ -22,6 +31,15 @@ class PDF(FPDF):
         self.ln(10)
         
     def footer(self):
+        """
+        Creates a footer with page numbering.
+
+        Displays the page number centered at the bottom
+        of each page in a subtle grey color.
+
+        Returns:
+            None: Renders footer directly onto the PDF page.
+        """
         self.set_y(-10)
         self.set_font('DejaVu','',5)
         self.set_text_color(169,169,169)#grey
@@ -29,6 +47,15 @@ class PDF(FPDF):
     
     #set title   
     def metric_title(self,mt_title):
+        """
+        Renders a section title for a specific metric.
+
+        Args:
+            mt_title (str): Title of the metric section.
+
+        Returns:
+            None: Writes the formatted title into the PDF.
+        """
         self.set_font('DejaVu','',14)
         self.set_fill_color(200,220,255)
     
@@ -37,6 +64,18 @@ class PDF(FPDF):
     
     #open text report
     def metric_body(self,name):
+        """
+        Reads and inserts a textual metric report into the PDF.
+
+        Loads the corresponding text analysis file and writes
+        its content in a justified format.
+
+        Args:
+            name (str): Path to the metric text report file.
+
+        Returns:
+            None: Embeds the text content into the PDF.
+        """
         with open(name,'r',encoding='utf-8',errors='replace') as fh:
             txt=fh.read()
         
@@ -49,6 +88,15 @@ class PDF(FPDF):
     
     
     def metric_chart(self,chart_name):
+        """
+        Inserts a chart image into the PDF.
+
+        Args:
+            chart_name (str): Path to the chart image file.
+
+        Returns:
+            None: Embeds the image into the PDF.
+        """
         self.image(chart_name,x=10,w=self.w - 20)
         self.ln()
     
@@ -56,6 +104,21 @@ class PDF(FPDF):
     
     
     def print_metric(self,mt_title,name,chart_list):
+        """
+        Generates a complete metric section in the PDF.
+
+        Adds:
+        - A new page with textual analysis
+        - An optional visualization page with charts
+
+        Args:
+            mt_title (str): Metric section title.
+            name (str): Path to the text report file.
+            chart_list (list): List of chart image file paths.
+
+        Returns:
+            None: Writes the full metric section to the PDF.
+        """
         self.add_page()
         self.metric_title(mt_title)
         self.metric_body(name)

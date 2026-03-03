@@ -96,6 +96,15 @@ if page=="Overview":
     st.write("")
 
     st.info("👈 Use the sidebar to navigate between different analysis sections")
+    st.write("")
+    st.info("👇 Use the button below to download complete analysis")
+    
+    #Downlaod button
+    pdf_path='Final_Report.pdf'
+    with open(pdf_path,"rb") as f:
+        report=f.read()
+        
+    st.download_button(label="⬇️Download Analysis",data=report,file_name="Final_Report.pdf",mime="application/pdf")
 
 #User Metrics
 if page=="User Metrics":
