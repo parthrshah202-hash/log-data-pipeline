@@ -2,7 +2,7 @@
 
 A modular Python pipeline for analyzing server log data with automated reporting and visualization.
 
-**Live Demo:** View Dashboard (link)
+**Live Demo:** [View Dashboard (link)](https://log-data-pipeline-3aicicf8mzcz2k2e2k4uch.streamlit.app/)
 
 ---
 
