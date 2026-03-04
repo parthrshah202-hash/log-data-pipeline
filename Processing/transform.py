@@ -3,9 +3,23 @@ import pandas as pd
 
 #loading cleaned data
 def load_data(filepath):
-    df=pd.read_csv(filepath)
-    print("Data Loaded")
+    try:
+        df = pd.read_csv(filepath)
+        print(f"File loaded: {filepath}")
+    except FileNotFoundError:
+        print(f"File not found: {filepath}")
+        exit(1)
+    
     return df
+
+def save_metrics(df,filepath):
+    try:
+        df.to_csv(filepath, index=False)
+        print(f"Saved: {filepath}")
+    except FileNotFoundError:
+        print(f"Directory does not exist for: {filepath}")
+        exit(1)
+    
 
 #helper function to calculate error and success
 def add_error_success_metrics(df, metrics, group_column):
@@ -187,19 +201,23 @@ if __name__=="__main__":
     df=load_data('Data/CLEANED/cleaned_server_logs.csv')
     
     user_metrics=create_user_metrics(df)
-    user_metrics.to_csv('Data/Transformed/user_metrics.csv',index=False)
+    save_metrics(user_metrics,'Data/Transformed/user_metrics.csv')
+    
     
     endpoint_metrics=create_endpoint_metrics(df)
-    endpoint_metrics.to_csv('Data/Transformed/endpoint_metrics.csv',index=False)
+    save_metrics(endpoint_metrics,'Data/Transformed/endpoint_metrics.csv')
     
     hourly_metrics=create_hourly_metrics(df)
-    hourly_metrics.to_csv('Data/Transformed/hourly_metrics.csv',index=False)
+    save_metrics(hourly_metrics,'Data/Transformed/hourly_metrics.csv')
+   
     
     daily_metrics=create_daily_metrics(df)
-    daily_metrics.to_csv('Data/Transformed/daily_metrics.csv',index=False)
+    save_metrics(daily_metrics,'Data/Transformed/daily_metrics.csv')
+    
     
     method_metrics=create_method_metrics(df)
-    method_metrics.to_csv('Data/Transformed/method_metrics.csv',index=False)
+    save_metrics(method_metrics,'Data/Transformed/method_metrics.csv')
+    
     
     print("\n" + "="*60)
     print("✓ All Metrics Created!!")

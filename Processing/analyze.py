@@ -6,7 +6,12 @@ os.makedirs('Outputs/Reports',exist_ok=True)
 
 #reading all metrices
 def load_metrics(filename):
-    df=pd.read_csv(filename)
+    try:
+        df = pd.read_csv(filename)
+        print(f"File loaded: {filename}")
+    except FileNotFoundError:
+        print(f"File not found: {filename}")
+        exit(1)
     return df
 
 #function to save tet report

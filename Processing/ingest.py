@@ -17,8 +17,13 @@ def load_data(filepath):
         pandas.DataFrame: Loaded dataset.
     """
     #using filepath so that i can reuse this function
-    df=pd.read_csv(filepath)
-    print("File read")
+    try:
+        df=pd.read_csv(filepath)
+        print("File read")
+    except FileNotFoundError:
+        print("Error 404 : File Not Found !")
+        exit(1)
+        
     return df
 
 
@@ -99,5 +104,11 @@ if __name__ == "__main__":
     
     df=clean_data(df)
     
-    df.to_csv('Data/CLEANED/cleaned_server_logs.csv',index=None)
+    filepath='Data/CLEANED/cleaned_server_logs.csv'
+    try:
+        df.to_csv(filepath, index=False)
+        print(f"Saved: {filepath}")
+    except FileNotFoundError:
+        print(f"Directory does not exist for: {filepath}")
+    exit(1)
     

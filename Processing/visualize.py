@@ -1,7 +1,11 @@
+import os
 import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
 plt.style.use('fivethirtyeight')
+
+#creating output folder
+os.makedirs('Outputs/Charts',exist_ok=True)
 
 def save_chart(filename):
     """

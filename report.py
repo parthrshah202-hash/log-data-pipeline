@@ -76,8 +76,12 @@ class PDF(FPDF):
         Returns:
             None: Embeds the text content into the PDF.
         """
-        with open(name,'r',encoding='utf-8',errors='replace') as fh:
-            txt=fh.read()
+        try:
+            with open(name,'r',encoding='utf-8',errors='replace') as fh:
+                txt=fh.read()
+        except FileNotFoundError:
+                print(f"📂 **Report not found:** The file `{name}` is missing. Kindly run the analysis script first.")
+                return None
         
         self.set_font('DejaVu','',12)
         self.multi_cell(0, 5, txt, align='J')
@@ -128,8 +132,15 @@ class PDF(FPDF):
             self.add_page()
             self.metric_title(f"{mt_title} - Visualizations")
             for chart in chart_list:
-                self.image(chart, x=10, w=self.w - 20, h=110)
-                self.ln(5)
+                try:
+                    self.image(chart, x=10, w=self.w - 20, h=110)
+                    self.ln(5)
+                except (FileNotFoundError,RuntimeError):
+                    self.set_font('DejaVu', '', 10)
+                    self.set_text_color(255, 0, 0) # Red color for error visibility
+                    self.cell(0, 10, f"Chart not found: {chart}", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+                    self.set_text_color(0, 0, 0) # Reset to black
+                    self.ln(5)
      
 
         
@@ -138,7 +149,15 @@ if __name__=="__main__":
     
     #Object
     pdf=PDF('P','mm','A4')
-    pdf.add_font('DejaVu', '', 'fonts/DejaVuSans.ttf', uni=True)
+    
+    try:
+        pdf.add_font('DejaVu', '', 'fonts/DejaVuSans.ttf', uni=True)
+        print("✓ Font loaded")
+    except FileNotFoundError:
+        print("Font file not found: fonts/DejaVuSans.ttf")
+        print("PDF generation cannot continue without font file.")
+        exit(1)
+    
     pdf.set_auto_page_break(auto=True,margin=15)
     
     #printing user analysis
@@ -166,4 +185,14 @@ if __name__=="__main__":
     "HTTP Methods",
     "Outputs/Reports/method_analysis.txt",["Outputs/Charts/Method Distribution.png","Outputs/Charts/Method_Success_vs_Error_Count.png"])
     
-    pdf.output('Final_Report.pdf')
+    
+    try:
+        pdf.output('Final_Report.pdf')
+        print("Saved: Final_Report.pdf")
+    except PermissionError:
+        print("Permission denied: Final_Report.pdf")
+        print("Close the PDF if it's open and try again.")
+        exit(1)
+    except Exception as e:
+        print(f"Error saving PDF: {e}")
+        exit(1)

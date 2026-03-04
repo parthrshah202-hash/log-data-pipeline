@@ -7,7 +7,12 @@ st.set_page_config(page_title="📊Log Data Processing and Insight Pipeline",lay
 #Function to load data
 @st.cache_data
 def load_data(filename):
-    df=pd.read_csv(filename)
+    try:
+        df = pd.read_csv(filename)
+        st.error(f"File loaded: {filename}")
+    except FileNotFoundError:
+        print(f"File not found: {filename}")
+        st.stop()
     return df
 
 #Function to load report
@@ -25,8 +30,13 @@ def load_report(filename):
     Returns:
         str: Report content as a string.
     """
-    with open(filename, "r", encoding="utf-8") as f:
-        return f.read()
+    try:
+        with open(filename, "r", encoding="utf-8") as f:
+            return f.read()
+    except FileNotFoundError:
+        st.error(f"📂 **Report not found:** The file `{filename}` is missing. Kindly run the analysis script first.")
+        return None
+        
     
     
     
@@ -101,10 +111,13 @@ if page=="Overview":
     
     #Downlaod button
     pdf_path='Final_Report.pdf'
-    with open(pdf_path,"rb") as f:
-        report=f.read()
-        
-    st.download_button(label="⬇️Download Analysis",data=report,file_name="Final_Report.pdf",mime="application/pdf")
+    try:
+        with open(pdf_path,"rb") as f:
+            report=f.read()
+        st.download_button(label="⬇️Download Analysis",data=report,file_name="Final_Report.pdf",mime="application/pdf")
+    except FileNotFoundError:
+        st.warning("⚠️ PDF report not available. Run `python report.py` to generate it.")
+    
 
 #User Metrics
 if page=="User Metrics":
@@ -126,7 +139,10 @@ if page=="User Metrics":
     st.header("Text Report : ",divider=True)
     with st.expander("📄View Detailed Text Report"):
         report = load_report("Outputs/Reports/user_analysis.txt")
-        st.text(report)
+        if report:
+            st.text(report)
+        else:
+            st.warning("No report exists!")
         
     st.divider()
     
@@ -134,9 +150,15 @@ if page=="User Metrics":
     st.subheader("📈Charts")
     col1,col2=st.columns(2)
     with col1:
-        st.image("Outputs/Charts/top_users.png",caption="Top 10 Most Active Users")
+        try:
+            st.image("Outputs/Charts/top_users.png",caption="Top 10 Most Active Users")
+        except:
+            st.warning("Chart not found")
     with col2:
-        st.image("Outputs/Charts/success_rate.png",caption="Success Rate Distribution")
+        try:
+            st.image("Outputs/Charts/success_rate.png",caption="Success Rate Distribution")
+        except:
+            st.warning("Chart not found")
         
 
 #Endpoint Metrics
@@ -159,7 +181,10 @@ if page=="Endpoint Analysis":
     st.header("Text Report : ",divider=True)
     with st.expander("📄View Detailed Text Report"):
         report = load_report("Outputs/Reports/endpoint_analysis.txt")
-        st.text(report)
+        if report:
+            st.text(report)
+        else:
+            st.warning("No report exists!")
         
     st.divider()
     
@@ -167,9 +192,15 @@ if page=="Endpoint Analysis":
     st.subheader("📈Charts")
     col1,col2=st.columns(2)
     with col1:
-        st.image("Outputs/Charts/slowest_endpoints.png",caption="Top 10 Slowest Endpoints")
+        try:
+            st.image("Outputs/Charts/slowest_endpoints.png",caption="Top 10 Slowest Endpoints")
+        except:
+            st.warning("Chart not found")
     with col2:
-        st.image("Outputs/Charts/avg_time_vs_success_rate.png",caption="Success Rate Distribution with Average Response Time")
+        try:
+            st.image("Outputs/Charts/avg_time_vs_success_rate.png",caption="Success Rate Distribution with Average Response Time")
+        except:
+            st.warning("Chart not found")
         
 #Hourly Patterns
 if page=="Hourly Patterns":
@@ -193,7 +224,10 @@ if page=="Hourly Patterns":
     st.header("Text Report : ",divider=True)
     with st.expander("📄View Detailed Text Report"):
         report = load_report("Outputs/Reports/hourly_analysis.txt")
-        st.text(report)
+        if report:
+            st.text(report)
+        else:
+            st.warning("No report exists!")
         
     st.divider()
     
@@ -201,9 +235,15 @@ if page=="Hourly Patterns":
     st.subheader("📈Charts")
     col1,col2=st.columns(2)
     with col1:
-        st.image("Outputs/Charts/hourly_traffic_pattern.png",caption="Hourly Traffic Pattern")
+        try:
+            st.image("Outputs/Charts/hourly_traffic_pattern.png",caption="Hourly Traffic Pattern")
+        except:
+            st.warning("Chart not found")
     with col2:
-        st.image("Outputs/Charts/tot_requests and success_rate.png",caption="Success Rate Distribution with Total Requests")
+        try:
+            st.image("Outputs/Charts/tot_requests and success_rate.png",caption="Success Rate Distribution with Total Requests")
+        except:
+            st.warning("Chart not found")
     
     
 #Daily Trends
@@ -229,13 +269,19 @@ if page=="Daily Trends":
     st.header("Text Report : ",divider=True)
     with st.expander("📄View Detailed Text Report"):
         report = load_report("Outputs/Reports/daily_analysis.txt")
-        st.text(report)
+        if report:
+            st.text(report)
+        else:
+            st.warning("No report exists!")
         
     st.divider()
     
     #Charts
     st.subheader("📈Charts")
-    st.image("Outputs/Charts/Daily Trend with Errors.png",caption="Daily Error Trend")
+    try:
+        st.image("Outputs/Charts/Daily Trend with Errors.png",caption="Daily Error Trend")
+    except:
+            st.warning("Chart not found")
 
 
 #HTTP Methods
@@ -260,7 +306,10 @@ if page=="HTTP Methods":
     st.header("Text Report : ",divider=True)
     with st.expander("📄View Detailed Text Report"):
         report = load_report("Outputs/Reports/method_analysis.txt")
-        st.text(report)
+        if report:
+            st.text(report)
+        else:
+            st.warning("No report exists!")
         
     st.divider()
     
@@ -268,6 +317,12 @@ if page=="HTTP Methods":
     st.subheader("📈Charts")
     col1,col2=st.columns(2)
     with col1:
-        st.image("Outputs/Charts/Method Distribution.png",caption="Distribution of Methods")
+        try:
+            st.image("Outputs/Charts/Method Distribution.png",caption="Distribution of Methods")
+        except:
+            st.warning("Chart not found")
     with col2:
-        st.image("Outputs/Charts/Method_Success_vs_Error_Count.png",caption="Error Count among Methods")
+        try:
+            st.image("Outputs/Charts/Method_Success_vs_Error_Count.png",caption="Error Count among Methods")
+        except:
+            st.warning("Chart not found")
