@@ -1,0 +1,11 @@
+# --- Core Data Stack ---
+pandas>=2.2.2
+numpy>=1.26.4
+
+# --- Visualization & UI ---
+matplotlib>=3.8.4
+streamlit>=1.32.2
+
+# --- Reporting ---
+fpdf2>=2.7.8
+
