@@ -7,6 +7,16 @@ plt.style.use('fivethirtyeight')
 #creating output folder
 os.makedirs('Outputs/Charts',exist_ok=True)
 
+#reading all metrices
+def load_metrics(filename):
+    try:
+        df = pd.read_csv(filename)
+        print(f"File loaded: {filename}")
+    except FileNotFoundError:
+        print(f"File not found: {filename}")
+        exit(1)
+    return df
+
 def save_chart(filename):
     """
     Saves the current matplotlib figure to the charts directory.
@@ -266,19 +276,19 @@ def visualize_method_metrics(method_metrics):
     
     
 if __name__=="__main__":
-    user_metrics=pd.read_csv("Data/Transformed/user_metrics.csv")
+    user_metrics=load_metrics("Data/Transformed/user_metrics.csv")
     visualize_user_metrics(user_metrics)
     
-    endpoint_metrics=pd.read_csv("Data/Transformed/endpoint_metrics.csv")
+    endpoint_metrics=load_metrics("Data/Transformed/endpoint_metrics.csv")
     visualize_endpoint_metrics(endpoint_metrics)
     
-    hourly_metrics=pd.read_csv("Data/Transformed/hourly_metrics.csv")
+    hourly_metrics=load_metrics("Data/Transformed/hourly_metrics.csv")
     visualize_hourly_metrics(hourly_metrics)
     
-    daily_metrics=pd.read_csv("Data/Transformed/daily_metrics.csv")
+    daily_metrics=load_metrics("Data/Transformed/daily_metrics.csv")
     visualize_daily_metrics(daily_metrics)
     
-    method_metrics=pd.read_csv("Data/Transformed/method_metrics.csv")
+    method_metrics=load_metrics("Data/Transformed/method_metrics.csv")
     visualize_method_metrics(method_metrics)
     
     print("\n" + "="*60)
