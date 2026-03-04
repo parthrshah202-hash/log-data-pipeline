@@ -1,24 +1,35 @@
+# ==============================
 # Python
+# ==============================
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
 .Python
 
-# Virtual environments
+# ==============================
+# Virtual Environments
+# ==============================
 venv/
 env/
 .venv/
 ENV/
 
-# IDE
+# ==============================
+# IDE / Editor Files
+# ==============================
 .vscode/
 .idea/
 *.swp
 .DS_Store
 
+# ==============================
 # Streamlit
+# ==============================
 .streamlit/secrets.toml
 
+# ==============================
+# Notes
+# ==============================
 # Outputs are committed for Streamlit Cloud
 # Users can regenerate locally if needed
