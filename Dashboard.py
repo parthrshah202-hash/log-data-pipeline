@@ -9,7 +9,6 @@ st.set_page_config(page_title="📊Log Data Processing and Insight Pipeline",lay
 def load_data(filename):
     try:
         df = pd.read_csv(filename)
-        st.error(f"File loaded: {filename}")
     except FileNotFoundError:
         print(f"File not found: {filename}")
         st.stop()
