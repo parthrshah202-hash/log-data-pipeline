@@ -1,0 +1,29 @@
+2026-04-11 21:53:08,511 INFO: Data/RAW/server_logs.csv file has been read
+2026-04-11 21:53:08,533 INFO: Data Cleaned
+2026-04-11 21:53:13,491 INFO: File loaded: Data/CLEANED/cleaned_server_logs.csv
+2026-04-11 21:53:13,507 INFO: Saved: Data/Transformed/user_metrics.csv
+2026-04-11 21:53:13,507 INFO: Saved: Data/Transformed/endpoint_metrics.csv
+2026-04-11 21:53:13,540 INFO: Saved: Data/Transformed/hourly_metrics.csv
+2026-04-11 21:53:13,556 INFO: Saved: Data/Transformed/daily_metrics.csv
+2026-04-11 21:53:13,556 INFO: Saved: Data/Transformed/method_metrics.csv
+2026-04-11 21:53:13,556 INFO: ============================================================
+2026-04-11 21:53:13,556 INFO: \u2713 All Metrics Created!!
+2026-04-11 21:53:13,556 INFO: ============================================================
+2026-04-11 21:53:19,069 INFO: File loaded: Data/Transformed/user_metrics.csv
+2026-04-11 21:53:19,085 INFO: File loaded: Data/Transformed/endpoint_metrics.csv
+2026-04-11 21:53:19,085 INFO: File loaded: Data/Transformed/hourly_metrics.csv
+2026-04-11 21:53:19,102 INFO: File loaded: Data/Transformed/daily_metrics.csv
+2026-04-11 21:53:19,102 INFO: File loaded: Data/Transformed/method_metrics.csv
+2026-04-11 21:53:19,102 INFO: ============================================================
+2026-04-11 21:53:19,102 INFO: \u2713 ANALYSIS COMPLETE - All Reports Saved
+2026-04-11 21:53:19,102 INFO: ============================================================
+2026-04-11 21:53:24,596 INFO: File loaded: Data/Transformed/user_metrics.csv
+2026-04-11 21:53:25,146 INFO: File loaded: Data/Transformed/endpoint_metrics.csv
+2026-04-11 21:53:25,576 INFO: File loaded: Data/Transformed/hourly_metrics.csv
+2026-04-11 21:53:26,197 INFO: File loaded: Data/Transformed/daily_metrics.csv
+2026-04-11 21:53:26,550 INFO: File loaded: Data/Transformed/method_metrics.csv
+2026-04-11 21:53:26,918 INFO: 
+============================================================
+2026-04-11 21:53:26,918 INFO: \u2713 All Charts Created!!
+2026-04-11 21:53:26,918 INFO: ============================================================
+2026-04-11 21:57:29,645 INFO: File loaded: Data/CLEANED/cleaned_server_logs.csv

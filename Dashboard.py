@@ -1,6 +1,11 @@
 import os
 import pandas as pd
 import streamlit as st
+import logging
+
+logging.basicConfig(filename="logs/log_test.log",format='%(asctime)s %(levelname)s: %(message)s',filemode='a')
+logger=logging.getLogger()
+logger.setLevel(logging.DEBUG)
 
 st.set_page_config(page_title="📊Log Data Processing and Insight Pipeline",layout="wide")
 
@@ -9,8 +14,9 @@ st.set_page_config(page_title="📊Log Data Processing and Insight Pipeline",lay
 def load_data(filename):
     try:
         df = pd.read_csv(filename)
+        logger.info(f"File loaded: {filename}")
     except FileNotFoundError:
-        print(f"File not found: {filename}")
+        logger.error(f"File not found: {filename}")
         st.stop()
     return df
 

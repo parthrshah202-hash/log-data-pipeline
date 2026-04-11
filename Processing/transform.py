@@ -1,13 +1,18 @@
 import numpy as np
 import pandas as pd
+import logging
+
+logging.basicConfig(filename="logs/log_test.log",format='%(asctime)s %(levelname)s: %(message)s',filemode='a')
+logger=logging.getLogger()
+logger.setLevel(logging.DEBUG)
 
 #loading cleaned data
 def load_data(filepath):
     try:
         df = pd.read_csv(filepath)
-        print(f"File loaded: {filepath}")
+        logger.info(f"File loaded: {filepath}")
     except FileNotFoundError:
-        print(f"File not found: {filepath}")
+        logger.error(f"File not found: {filepath}")
         exit(1)
     
     return df
@@ -15,9 +20,9 @@ def load_data(filepath):
 def save_metrics(df,filepath):
     try:
         df.to_csv(filepath, index=False)
-        print(f"Saved: {filepath}")
+        logger.info(f"Saved: {filepath}")
     except FileNotFoundError:
-        print(f"Directory does not exist for: {filepath}")
+        logger.error(f"Directory does not exist for: {filepath}")
         exit(1)
     
 
@@ -219,9 +224,9 @@ if __name__=="__main__":
     save_metrics(method_metrics,'Data/Transformed/method_metrics.csv')
     
     
-    print("\n" + "="*60)
-    print("✓ All Metrics Created!!")
-    print("="*60)
+    logger.info("="*60)
+    logger.info("✓ All Metrics Created!!")
+    logger.info("="*60)
     
     
     

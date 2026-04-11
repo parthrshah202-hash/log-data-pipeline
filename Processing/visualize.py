@@ -3,6 +3,11 @@ import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
 plt.style.use('fivethirtyeight')
+import logging
+
+logging.basicConfig(filename="logs/log_test.log",format='%(asctime)s %(levelname)s: %(message)s',filemode='a')
+logger=logging.getLogger()
+logger.setLevel(logging.INFO)
 
 #creating output folder
 os.makedirs('Outputs/Charts',exist_ok=True)
@@ -11,9 +16,9 @@ os.makedirs('Outputs/Charts',exist_ok=True)
 def load_metrics(filename):
     try:
         df = pd.read_csv(filename)
-        print(f"File loaded: {filename}")
+        logger.info(f"File loaded: {filename}")
     except FileNotFoundError:
-        print(f"File not found: {filename}")
+        logger.error(f"File not found: {filename}")
         exit(1)
     return df
 
@@ -31,7 +36,10 @@ def save_chart(filename):
     """
     
     filepath=f'Outputs/Charts/{filename}'
-    plt.savefig(filepath,dpi=300,bbox_inches='tight')
+    try:
+        plt.savefig(filepath,dpi=300,bbox_inches='tight')
+    except FileExistsError as e:
+        logger.error(f"File failed to save at {filepath}.Error : {e}")
     plt.close()
 
 #Visualizing for user_metrics
@@ -291,9 +299,9 @@ if __name__=="__main__":
     method_metrics=load_metrics("Data/Transformed/method_metrics.csv")
     visualize_method_metrics(method_metrics)
     
-    print("\n" + "="*60)
-    print("✓ All Charts Created!!")
-    print("="*60)
+    logger.info("\n" + "="*60)
+    logger.info("✓ All Charts Created!!")
+    logger.info("="*60)
 
 
 

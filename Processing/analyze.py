@@ -1,5 +1,10 @@
 import pandas as pd
 import os
+import logging
+
+logging.basicConfig(filename="logs/log_test.log",format='%(asctime)s %(levelname)s: %(message)s',filemode='a')
+logger=logging.getLogger()
+logger.setLevel(logging.DEBUG)
 
 #creating output folder
 os.makedirs('Outputs/Reports',exist_ok=True)
@@ -8,9 +13,9 @@ os.makedirs('Outputs/Reports',exist_ok=True)
 def load_metrics(filename):
     try:
         df = pd.read_csv(filename)
-        print(f"File loaded: {filename}")
+        logger.info(f"File loaded: {filename}")
     except FileNotFoundError:
-        print(f"File not found: {filename}")
+        logger.error(f"File not found: {filename}")
         exit(1)
     return df
 
@@ -32,8 +37,11 @@ def save_report(output,filename):
     #Joining all lines and writing to file
     report="\n".join(output)
     filepath=f'Outputs/Reports/{filename}'
-    with open(filepath,'w',encoding='utf-8') as f:
-        f.write(report)
+    try:
+        with open(filepath,'w',encoding='utf-8') as f:
+            f.write(report)
+    except OSError as e:
+            logger.error(f"File failed to save at {filepath}.Error : {e}")
 
 def analyze_user_metrics(user_metrics):
     """
@@ -446,9 +454,9 @@ if __name__=="__main__":
     method_metrics=load_metrics("Data/Transformed/method_metrics.csv")
     analyze_method_metrics(method_metrics)
     
-    print("\n" + "="*60)
-    print("✓ ANALYSIS COMPLETE - All Reports Saved")
-    print("="*60)
+    logger.info("="*60)
+    logger.info("✓ ANALYSIS COMPLETE - All Reports Saved")
+    logger.info("="*60)
     
     
     

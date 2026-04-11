@@ -2,6 +2,11 @@ import sys
 import numpy as np
 import pandas as pd
 from pprint import pprint
+import logging
+
+logging.basicConfig(filename="logs/log_test.log",format='%(asctime)s %(levelname)s: %(message)s',filemode='a')
+logger=logging.getLogger()
+logger.setLevel(logging.DEBUG)
 
 #<Loading a file>
 def load_data(filepath):
@@ -19,9 +24,9 @@ def load_data(filepath):
     #using filepath so that i can reuse this function
     try:
         df=pd.read_csv(filepath)
-        print("File read")
+        logger.info(f"{filepath} file has been read")
     except FileNotFoundError:
-        print("Error 404 : File Not Found !")
+        logger.error("Error 404 : File Not Found !")
         exit(1)
         
     return df
@@ -88,9 +93,8 @@ def clean_data(df):
     #Droping rows with data shared more than 1MB
     df = df[df['bytes_sent'] < (10**6)]
     
-    print("Data Cleaned")
-    print("The size of Cleaned Dataset is:")
-    print(df.size)
+    logger.info("Data Cleaned")
+    logger.info("The size of Cleaned Dataset is : %d",df.size())
     return df
 
 
@@ -107,8 +111,8 @@ if __name__ == "__main__":
     filepath='Data/CLEANED/cleaned_server_logs.csv'
     try:
         df.to_csv(filepath, index=False)
-        print(f"Saved: {filepath}")
+        logger.info(f"Saved: {filepath}")
     except FileNotFoundError:
-        print(f"Directory does not exist for: {filepath}")
+        logger.error(f"Directory does not exist for: {filepath}")
     exit(1)
     
