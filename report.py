@@ -1,5 +1,10 @@
 from fpdf import FPDF
 from fpdf.enums import XPos, YPos
+import logging
+
+logging.basicConfig(filename="logs/log_test.log",format='%(asctime)s %(levelname)s: %(message)s',filemode='a')
+logger=logging.getLogger()
+logger.setLevel(logging.DEBUG)
 
 title='ANALYSIS REPORT'
 
@@ -80,7 +85,7 @@ class PDF(FPDF):
             with open(name,'r',encoding='utf-8',errors='replace') as fh:
                 txt=fh.read()
         except FileNotFoundError:
-                print(f"📂 **Report not found:** The file `{name}` is missing. Kindly run the analysis script first.")
+                logger.error(f"📂 **Report not found:** The file `{name}` is missing. Kindly run the analysis script first.")
                 return None
         
         self.set_font('DejaVu','',12)
@@ -152,10 +157,10 @@ if __name__=="__main__":
     
     try:
         pdf.add_font('DejaVu', '', 'fonts/DejaVuSans.ttf', uni=True)
-        print("✓ Font loaded")
+        logger.info("✓ Font loaded")
     except FileNotFoundError:
-        print("Font file not found: fonts/DejaVuSans.ttf")
-        print("PDF generation cannot continue without font file.")
+        logger.error("Font file not found: fonts/DejaVuSans.ttf")
+        logger.error("PDF generation cannot continue without font file.")
         exit(1)
     
     pdf.set_auto_page_break(auto=True,margin=15)
@@ -188,11 +193,11 @@ if __name__=="__main__":
     
     try:
         pdf.output('Final_Report.pdf')
-        print("Saved: Final_Report.pdf")
+        logger.info("Saved: Final_Report.pdf")
     except PermissionError:
-        print("Permission denied: Final_Report.pdf")
-        print("Close the PDF if it's open and try again.")
+        logger.error("Permission denied: Final_Report.pdf")
+        logger.error("Close the PDF if it's open and try again.")
         exit(1)
     except Exception as e:
-        print(f"Error saving PDF: {e}")
+        logger.error(f"Error saving PDF: {e}")
         exit(1)
